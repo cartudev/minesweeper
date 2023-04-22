@@ -432,15 +432,14 @@ aspect-ratio:  1;
 background-color:#A2D149;
 }
 
-.cell-active1{
+.cell-active{
     display: block;
     height:100%;
     width: 100%;
-    position: relative;
+    position: absolute;
     top: -100%;
     z-index: 10;
-	-webkit-animation: swirl-out-bl-bck1 1s ease-in-out forwards;
-    animation: swirl-out-bl-bck1 1s ease-in-out forwards;
+    filter: brightness(95%);
 }
 
 @-webkit-keyframes swirl-out-bl-bck1 {

@@ -1,4 +1,4 @@
-import 'css/style.scss'
-import { gridCreation } from './modified.js'
+import './css/googleStyle.scss'
+import {gridCreation} from './modified'
 
 gridCreation()

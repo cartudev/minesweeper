@@ -4,7 +4,7 @@
 let columns = 20;
 let rows = 20;
 let cells = rows*columns;
-let minesQuantity= 400;
+let minesQuantity= 30;
 let flagsQuantity = minesQuantity;
 let elementStyle;
 //positions vars
@@ -60,7 +60,7 @@ export function gridCreation() {
     };
     for (let i = 1; i <= minesQuantity; i++) {
         let random = (Math.floor(Math.random() * numbersList.length))
-        addnumber = numbersList.splice(random, 1)
+        let addnumber = numbersList.splice(random, 1)
         minesPositions.push(addnumber[0])
     }
     minesPositions.sort((a, b) => a - b)
@@ -466,9 +466,10 @@ function templategen(){
         let left = `${randomIntFromInterval(100,400)}`;
         let halfLeft = Math.ceil(left/2);
         let tenLeft= Math.ceil(left*.1);
-        let topPos = randomIntFromInterval(160,400);
-        let fall  = topPos*-1 + randomIntFromInterval(110,300);
+        let topPos = randomIntFromInterval(0,400);
+        let fall  = topPos*-1 + randomIntFromInterval(0,200);
         let almostTop = Math.ceil(topPos * (randomIntFromInterval(92,98)*0.01));
+        let almostTop2 = Math.ceil(topPos * (randomIntFromInterval(92,98)*0.01));
         let rotate = randomIntFromInterval(90,400);
         let scale = randomIntFromInterval(1,3);
     
@@ -478,21 +479,22 @@ function templategen(){
             webkit-transform: rotate(0) scale(1);
             transform: rotate(0) scale(1);
             left: 0%;
+            top: 0%;
             visibility:visible;
             opacity: 1;
             }
+        35%{
+            top: -${almostTop}%;
+            left: ${negative}${(halfLeft-tenLeft)}%;
+        }
         50%{
             transform: scale(1.${randomIntFromInterval(1,5)})
             top: -${topPos}%;
                 left: ${negative}${halfLeft}%;
         }
     
-        40%{
-            top: -${almostTop}%;
-            left: ${negative}${(halfLeft-tenLeft)}%;
-        }
-        60%{
-            top: -${almostTop}%;
+        65%{
+            top: -${almostTop2}%;
             left: ${negative}${(halfLeft+tenLeft)}%;
         }
         90%{
@@ -502,7 +504,7 @@ function templategen(){
             webkit-transform: rotate(${rotate}deg) scale(0.${scale});
             opacity: 0;
             transform: rotate(${negative2}${rotate}deg) scale(0.${scale});
-            left: ${negative}${left}%;
+            left: ${negative}${(left+tenLeft)}%;
             top:${fall}%;
             filter: blur(${randomIntFromInterval(1,3)})
           visibility: hidden;
@@ -513,21 +515,23 @@ function templategen(){
             webkit-transform: rotate(0) scale(1);
             transform: rotate(0) scale(1);
             left: 0%;
+            top: 0%;
             visibility:visible;
             opacity: 1;
             }
+    
+        35%{
+            top: -${almostTop}%;
+            left: ${negative}${(halfLeft-tenLeft)}%;
+        }
+
         50%{
             transform: scale(1.${randomIntFromInterval(1,5)})
             top: -${topPos}%;
             left: ${negative}${halfLeft}%;
         }
-    
-        40%{
-            top: -${almostTop}%;
-            left: ${negative}${(halfLeft-tenLeft)}%;
-        }
-        60%{
-            top: -${almostTop}%;
+        65%{
+            top: -${almostTop2}%;
             left: ${negative}${(halfLeft+tenLeft)}%;
         }
         90%{
@@ -712,8 +716,8 @@ function animationCell(positionRep){
     anim.className = 'cell-active';
     positionRep.appendChild(anim);
     let animNum = randomIntFromInterval(1,15)
-    anim.style.webkitAnimation = `cellAnim${animNum} ${randomFloatInterval(0.7,1.3,2)}s ease-in-out forwards`;
-    anim.style.animation = `cellAnim${animNum} ${randomFloatInterval(0.7,1.3,2)}s ease-in-out forwards`;
+    anim.style.webkitAnimation = `cellAnim${animNum} ${randomFloatInterval(1,1.8,2)}s ease-in forwards`;
+    anim.style.animation = `cellAnim${animNum} ${randomFloatInterval(1,1.8,2)}s ease-in forwards`;
 }
 
 
@@ -723,7 +727,7 @@ function explodemines(number){
     let bg1 = randomIntFromInterval(0,7);
     let bg2 = randomIntFromInterval(0,1);
     let bg3 = randomIntFromInterval(0,1);
-    positionRep = cont.children[parseInt((number-1)/columns)].children[(number-1)%columns];
+    let positionRep = cont.children[parseInt((number-1)/columns)].children[(number-1)%columns];
     positionRep.classList.replace('cell','number');
     positionRep.classList.add('nm');
     positionRep.style.setProperty(`--exp_background1`,`${bgCOLS[bg1]}`);
@@ -774,7 +778,7 @@ function animationExp(explode){
     let bg3 = randomIntFromInterval(0,1);
     if( !flagsPosition.includes(explode)){
 
-        positionRep = cont.children[parseInt((explode-1)/columns)].children[(explode-1)%columns];
+        let positionRep = cont.children[parseInt((explode-1)/columns)].children[(explode-1)%columns];
         positionRep.classList.replace('cell','number');
         positionRep.classList.add('nm');
         positionRep.style.setProperty(`--exp_background1`,`${bgCOLS[bg1]}`);

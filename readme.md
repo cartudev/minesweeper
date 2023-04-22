@@ -54,6 +54,11 @@ The following contributors have contributed to this project and their contact in
 - [@cartudev](https://github.com/cartudev/)
 
 ## Version History
+* 0.1.2
+    * Main animation for cells fixed.
+* 0.1.1
+    * solving some simple code bugs.
+    * functionality started some issues with the mines bomb animation, but looks good.
 * 0.1.0
     * Initial Release.
     * Added readme.md and about info.
