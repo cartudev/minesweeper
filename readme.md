@@ -58,7 +58,7 @@ The following contributors have contributed to this project and their contact in
     * Main animation for cells fixed.
 * 0.1.1
     * solving some simple code bugs.
-    * functionality started some issues with the mines bomb animation, but looks good.
+    * Functionality has started; some issues with the mines bomb animation, but it looks good.
 * 0.1.0
     * Initial Release.
     * Added readme.md and about info.
