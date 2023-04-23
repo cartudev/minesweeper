@@ -54,8 +54,12 @@ The following contributors have contributed to this project and their contact in
 - [@cartudev](https://github.com/cartudev/)
 
 ## Version History
+* 0.1.4
+    * fixed bookmark of mines explotion in animations.
+    * CSS code more clean.
 * 0.1.3
-    * Fixed some bugs and cleaning the css code.
+    * Fixed some bugs.
+    * CSS code more clean.
 * 0.1.2
     * Main animation for cells fixed.
 * 0.1.1
