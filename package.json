@@ -1,7 +1,7 @@
 {
   "name": "minesweeper",
   "private": true,
-  "version": "0.1.2",
+  "version": "0.1.3",
   "author": "Carlos Tuñon",
   "homepage": "https://cartudev.github.io/minesweeper/",
   "type": "module",
