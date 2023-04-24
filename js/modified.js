@@ -4,7 +4,7 @@
 let columns = 20;
 let rows = 20;
 let cells = rows*columns;
-let minesQuantity= 300;
+let minesQuantity= 80;
 let flagsQuantity = minesQuantity;
 let elementStyle;
 //positions vars
@@ -15,6 +15,9 @@ let GridComplete = [null]
 let flagsPosition = []
 let theme = "googleStyle"
 templategen()
+let myTimeout = []
+
+
 let Colors = [['var(--exp_background1)', 'var(--exp_color1)'],
     ['var(--exp_background2)', 'var(--exp_color2)'],
     ['var(--exp_background3)', 'var(--exp_color3)'],
@@ -435,6 +438,10 @@ function newGame(){
     document.querySelector('.mines').innerHTML = flagsQuantity.toString();
     document.querySelector('.timer').innerHTML = timer.toString()
     control = setInterval(cronometro,1000)
+    for (var i=0; i<myTimeout.length; i++) {
+    clearTimeout(myTimeout[i]);
+      }
+    myTimeout = [];
     //booleans
     win = false;
     loses = false;
@@ -444,6 +451,7 @@ function newGame(){
             content.children[i].children[j].classList.replace('flagerror','cell');
             content.children[i].children[j].classList.replace('flag','cell');
             content.children[i].children[j].classList.replace('number','cell');
+            content.children[i].children[j].innerHTML = '';
             content.children[i].children[j].classList.remove("n0", "n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "nm");
         }
     }
@@ -773,8 +781,7 @@ for(let i=1; i<= 8;i++){
 
     }
     for (let explode of minesPositions){
-        let myTimeout = setTimeout(animationExp, randomIntFromInterval(500,(minesQuantity*500)), explode);
-        
+    myTimeout.push(setTimeout(animationExp, randomIntFromInterval(500,(minesQuantity*500)), explode));
 
     }
 
