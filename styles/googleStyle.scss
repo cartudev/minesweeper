@@ -111,7 +111,7 @@ body{
     background-color:#AAD751;
 }
 
-/* .row:nth-child(even)>:nth-child(even):not(.cell, .nm),
+.row:nth-child(even)>:nth-child(even):not(.cell, .nm),
 .row:nth-child(odd)>:nth-child(even):not(.cell, .nm),
 .row:nth-child(even)>:nth-child(odd):not(.cell, .nm),
 .row:nth-child(odd)>:nth-child(odd):not(.cell, .nm){
@@ -135,7 +135,7 @@ body{
     aspect-ratio:  1;
     z-index: 1;
     content: "";
-} */
+}
 
 .row:nth-child(even)>:nth-child(even):not(.cell, .nm)::after,
 .row:nth-child(odd)>:nth-child(odd):not(.cell, .nm)::after{
@@ -288,8 +288,15 @@ body{
     height: 33px;
     position: relative;
     display: block;
-    z-index: 4;
 }
+.nm-block{
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    position: absolute;
+    left: 0;
+}
+
 /* .nm::before{
     width: 33px;
     display: block;
@@ -301,18 +308,19 @@ body{
     z-index: -1;
     background: #00582C;
 } */
-.nm div:nth-child(1){
+.nm-mine{
     text-align: center;
     margin: auto;
+    inset: 0;
     width: 50%;
     height: 50%;
     border-radius: 50%;
     position: absolute;
-    z-index: 1;
+    z-index: 10;
     content: "" ;
 }
 
-.nm div:nth-child(n+2){
+.nm-confetti{
     opacity: 1;
     display: block;
     position: absolute;
@@ -320,7 +328,7 @@ body{
     width: 50%;
     text-align: center;
     aspect-ratio:  1;
-    z-index: 5;
+    z-index: 44;
 
 /*     background-color: var(--exp_background1);
     animation: var(--animation1) var(--time) backwards ease-in;

@@ -4,7 +4,7 @@
 let columns = 20;
 let rows = 20;
 let cells = rows*columns;
-let minesQuantity= 30;
+let minesQuantity= 300;
 let flagsQuantity = minesQuantity;
 let elementStyle;
 //positions vars
@@ -745,16 +745,17 @@ function explodemines(number){
 
     positionRep.classList.replace('cell','number');
     positionRep.classList.add('nm');
-    positionRep.style.setProperty(`background-color`,`${bgCols[bg1][0]}`);
-    console.log(bgCols[bg1][1]);   
+    // positionRep.style.setProperty(`background-color`,`${bgCols[bg1][0]}`);
+    // console.log(bgCols[bg1][1]);   
     positionRep.insertAdjacentHTML('afterbegin', 
-    `<div style="background-color:${bgCols[bg1][1]}"></div>
+    `<div class="nm-block" style="background-color:${bgCols[bg1][0]}"></div>
+    <div class="nm-mine" style="background-color:${bgCols[bg1][1]}"></div>
     `)
-    for(let i=1; i<= 8;i++){
+for(let i=1; i<= 8;i++){
     bg2 = randomIntFromInterval(0,1);
     
     positionRep.insertAdjacentHTML('beforeend',     
-    `<div style=" background-color: ${Colors[bg1][bg2]};
+    `<div class="nm-confetti" style=" background-color: ${Colors[bg1][bg2]};
     animation: bookmark-anim${randomIntFromInterval(1,20)} ${randomFloatInterval(4.5,6.5,1)}s forwards ease-in;
     scale : ${randomFloatInterval(0.5,1.5,1)}"></div>
     `);
@@ -798,13 +799,14 @@ function animationExp(explode){
         positionRep.classList.add('nm');
         // positionRep.style.setProperty(`background-color`,`${bgCols[bg1][0]}`);
         positionRep.insertAdjacentHTML('afterbegin', 
-        `<div style="background-color:${bgCols[bg1][1]}"></div>
+        `<div class="nm-block" style="background-color:${bgCols[bg1][0]}"></div>
+        <div class="nm-mine" style="background-color:${bgCols[bg1][1]}"></div>
         `)
         for(let i=1; i<= 8;i++){
         bg2 = randomIntFromInterval(0,1);
         
         positionRep.insertAdjacentHTML('beforeend',     
-        `<div style=" background-color: ${Colors[bg1][bg2]};
+        `<div class="nm-confetti" style=" background-color: ${Colors[bg1][bg2]};
         animation: bookmark-anim${randomIntFromInterval(1,20)} ${randomFloatInterval(4.5,6.5,1)}s forwards ease-in-out;
         scale : ${randomFloatInterval(0.5,1.5,1)}"></div>
         `);
