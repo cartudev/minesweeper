@@ -58,6 +58,7 @@ The following contributors have contributed to this project and their contact in
     * Added config button.
 * 0.1.7
     * Added start again button and win background.
+    * Added congrats banner.
 * 0.1.6
     * Added animation on flags for the Google-style theme.
     * Added retry button and lose background.
