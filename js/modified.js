@@ -4,7 +4,7 @@
 let columns = 20;
 let rows = 20;
 let cells = rows*columns;
-let minesQuantity= 80;
+let minesQuantity= 1;
 let flagsQuantity = minesQuantity;
 let elementStyle;
 //positions vars
@@ -50,7 +50,7 @@ let invertClick = false;
 
 //listeners buttons and selectors
 let content = document.querySelector('.contenedor')
-let newGameButtons = document.querySelectorAll('.newGame, .lose-retry-button')  //.addEventListener('click', function () {newGame()}, true)
+let newGameButtons = document.querySelectorAll('.newGame, .lose-retry-button, .congrats-retry-button')  //.addEventListener('click', function () {newGame()}, true)
 let listenerNewGame = newGameButtons.forEach(x => 
     x.addEventListener('click', function () {newGame()}, true)
  );
@@ -228,8 +228,8 @@ function lClick(position){
     else{
         checkeds.push(position)}
     if(checkeds.length == cells-minesQuantity){
-        winfn()
 
+        winfn()       
         return;
     }
 }
@@ -271,8 +271,8 @@ function flags(number){
     document.querySelector('.mines').innerHTML = flagsQuantity.toString()
 }
 function winfn(){
-    butn.classList.replace('newGame', 'winbtn')
-    document.querySelector('.congrats').style.display = 'block';
+    butn.classList.replace('newGame', 'winbtn');
+    theme == 'googleStyle' ? (document.querySelector('.congrats-container').style.display = 'block') : (document.querySelector('.congrats').style.display = 'block')
     win = true;
 }
 function losefn(number){
@@ -485,14 +485,18 @@ function newGame(){
     }
     gridCreation()
 
-    document.querySelector('.congrats').style.display = 'none'
     if(theme == 'googleStyle')  {
         // console.log(),
     document.querySelector('.lose-container').style.display = 'none';
-    document.querySelector('.lose-container').classList.remove('focussed')
+    document.querySelector('.lose-container').classList.remove('focussed');
+    document.querySelector('.congrats-container').style.display = 'none';
+    // document.querySelector('.win-container').classList.remove('focussed')
+
 }
 
-    else {document.querySelector('.lose').style.display = 'none'}
+    else {
+        document.querySelector('.congrats').style.display = 'none'
+        document.querySelector('.lose').style.display = 'none'}
 }
 
 
@@ -712,14 +716,22 @@ elementStyle.insertAdjacentHTML('beforeend', bookmarkAnim);
     let btnNewGame = document.createElement('div');
     btnNewGame.className = 'btn newGame';
     info.appendChild(btnNewGame);
+    let btnConfig = document.createElement('div');
+    btnConfig.className = 'config-btn';
+    info.appendChild(btnConfig);
     let btnFg = document.createElement('div');
     btnFg.className = 'btn fg';
     info.appendChild(btnFg);
+    
     let mines = document.createElement('div');
     mines.className = 'mines';
     info.appendChild(mines);
+
     section.className = 'section';
     container.appendChild(section);
+
+
+    
     let contenedor = document.createElement('div');
     contenedor.className = 'contenedor';
     section.appendChild(contenedor);
@@ -740,16 +752,18 @@ elementStyle.insertAdjacentHTML('beforeend', bookmarkAnim);
 
 
     let congrats = document.createElement('div');
-    congrats.className = 'congrats';
-    congrats.innerText = 'Felicitaciones has ganado!';
-    container.appendChild(congrats);
     let lose = document.createElement('div');
-    lose.addEventListener('click', function(){
-        if(lose.classList[1] != 'focussed' | lose.classList[0] != 'focussed')
-        {lose.classList.add('focussed')};
-    });
-    lose.className = 'lose-container';
-    theme == 'googleStyle' ? (
+
+    if (theme == 'googleStyle'){
+        lose.addEventListener('click', function(){
+            if(lose.classList[1] != 'focussed' | lose.classList[0] != 'focussed')
+            {lose.classList.add('focussed')};
+        });
+
+
+        congrats.className = 'congrats-container focussed';
+        lose.className = 'lose-container';
+    
         lose.insertAdjacentHTML('beforeend', `
         <div class="lose">
         <div class="lose-content"></div>
@@ -759,13 +773,30 @@ elementStyle.insertAdjacentHTML('beforeend', bookmarkAnim);
         </div>
         </div>
         `)
-    ) : (
-    lose.innerText = 'Lamentablemente has perdido',
-    container.appendChild(lose))
-    
-    container.appendChild(lose);
+        congrats.insertAdjacentHTML('beforeend', `
+        <div class="congrats">
+        <div class="congrats-content"></div>
+        <div class="congrats-bg"></div>
+        <div class="congrats-retry-button">
+        <div class="congrats-retry-icon"></div><p>Volver a jugar</p>
+        </div>
+        </div>
+        `
+        )
+        container.appendChild(lose)
+        container.appendChild(congrats);    
+     }
 
+    else {
+    congrats.className = 'lose';
+    lose.innerText = 'Lamentablemente has perdido';
+    container.appendChild(lose)
+    congrats.className = 'congrats';
+    congrats.innerText = 'Felicitaciones has ganado!';
+    container.appendChild(congrats)};
 }
+
+
 function negativefn(){
     if(Math.random() < 0.5){
         return '-'
