@@ -50,7 +50,11 @@ let invertClick = false;
 
 //listeners buttons and selectors
 let content = document.querySelector('.contenedor')
-document.querySelector('.btn').addEventListener('click', function () {newGame()}, true)
+let newGameButtons = document.querySelectorAll('.newGame, .lose-retry-button')  //.addEventListener('click', function () {newGame()}, true)
+let listenerNewGame = newGameButtons.forEach(x => 
+    x.addEventListener('click', function () {newGame()}, true)
+ );
+console.log(newGameButtons)
 content.addEventListener('click', function (event) { check(event, 'primary') }, true);
 content.addEventListener('contextmenu', function (event) { check(event, 'secondary') }, true);
 let fg = document.querySelector('.fg')
@@ -119,7 +123,6 @@ function numbersPosition(number){
 
 //check the position of the click and the invert button
 function check(event, action){
-    console.log('tiempo1')
     if(event.composedPath()[0].classList[0] == 'cell' || 
     event.composedPath()[0].classList[0] == 'number' || 
     event.composedPath()[0].classList[0] == 'flag'){
@@ -142,6 +145,20 @@ function check(event, action){
         return ;
     }
     }
+    if(event.composedPath()[0].parentElement.children[0].classList[0] == 'wait-to-kill'){
+        event.preventDefault()
+        return;
+    }
+
+    if(event.composedPath()[1].classList[0] == 'flag'){
+        event.preventDefault()
+        const position = 
+        parseInt(event.composedPath()[1].classList[1].match(/\d+/)) + 
+        ((parseInt(event.composedPath()[2].classList[1].match(/\d+/))-1)*columns);
+
+        flags(position)
+    }
+
     else{return ;}
 };
 
@@ -231,10 +248,23 @@ function flags(number){
     
     myIndex == -1 ? (
         positionRep.classList.replace('cell','flag'),
+        theme == 'googleStyle'? (
+        positionRep.innerHTML = '',
+        positionRep.insertAdjacentHTML('beforeend',
+        `<div class="f-animation" </div>`
+        )) : (console.log('nothing to do here')),
         flagsPosition.push(number) ,
         flagsQuantity -= 1
     ) : (
+        console.log('aqui deberias de salir'),
         positionRep.classList.replace('flag','cell'),
+        theme == 'googleStyle'? (
+            positionRep.innerHTML = '',
+            positionRep.insertAdjacentHTML('beforeend',     
+            `<div class="f-animation" style="animation: cellAnim${randomIntFromInterval(1,15)} ${randomFloatInterval(1,1.8,2)}s ease-in forwards; 
+            -webkit-animation: cellAnim${randomIntFromInterval(1,15)} ${randomFloatInterval(1,1.8,2)}s ease-in forwards"</div>`)
+        )
+        :(console.log('nothing to do here')),
         flagsPosition.splice(myIndex, 1),
         flagsQuantity += 1
     )
@@ -251,7 +281,7 @@ function losefn(number){
     loses = true;
     butn.classList.replace('newGame', 'losebtn')
     explodemines(number);
-    document.querySelector('.lose').style.display = 'block'
+    theme == 'googleStyle' ? (document.querySelector('.lose-container').style.display = 'block') : (document.querySelector('.lose').style.display = 'block')
 }
 
 function calc(position, ...args){
@@ -422,8 +452,6 @@ function newGame(){
     win ? butn.classList.replace('winbtn', 'newGame'): null;
     loses ? butn.classList.replace('losebtn', 'newGame'): null;
     let cellactive = document.querySelectorAll('.cell-active');
-    console.log(cellactive)
-
     for(let i = 0; i< cellactive.length;i++){cellactive[i].remove()}
     //positions vars
     minesPositions = [];
@@ -458,7 +486,13 @@ function newGame(){
     gridCreation()
 
     document.querySelector('.congrats').style.display = 'none'
-    document.querySelector('.lose').style.display = 'none'
+    if(theme == 'googleStyle')  {
+        // console.log(),
+    document.querySelector('.lose-container').style.display = 'none';
+    document.querySelector('.lose-container').classList.remove('focussed')
+}
+
+    else {document.querySelector('.lose').style.display = 'none'}
 }
 
 
@@ -710,8 +744,25 @@ elementStyle.insertAdjacentHTML('beforeend', bookmarkAnim);
     congrats.innerText = 'Felicitaciones has ganado!';
     container.appendChild(congrats);
     let lose = document.createElement('div');
-    lose.className = 'lose';
-    lose.innerText = 'Lamentablemente has perdido';
+    lose.addEventListener('click', function(){
+        if(lose.classList[1] != 'focussed' | lose.classList[0] != 'focussed')
+        {lose.classList.add('focussed')};
+    });
+    lose.className = 'lose-container';
+    theme == 'googleStyle' ? (
+        lose.insertAdjacentHTML('beforeend', `
+        <div class="lose">
+        <div class="lose-content"></div>
+        <div class="lose-bg"></div>
+        <div class="lose-retry-button">
+        <div class="lose-retry-icon"></div><p>Reintentar</p>
+        </div>
+        </div>
+        `)
+    ) : (
+    lose.innerText = 'Lamentablemente has perdido',
+    container.appendChild(lose))
+    
     container.appendChild(lose);
 
 }
@@ -776,6 +827,7 @@ for(let i=1; i<= 8;i++){
             positionRep = cont.children[parseInt((flag-1)/columns)].children[(flag-1)%columns];
 
             positionRep.classList.replace('flag','flagerror');
+            positionRep.innerHTML = ''
         }
 
 

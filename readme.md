@@ -54,15 +54,19 @@ The following contributors have contributed to this project and their contact in
 - [@cartudev](https://github.com/cartudev/)
 
 ## Version History
+* 0.1.6
+    * Added animation on flags for the Google-style theme.
+    * Added retry button and lose background.
+    * Fixed some bugs.
 * 0.1.5
-    * Bug in styles of cells fixed.
-    * CSS code cleaned.
+    * Fixed bug in cell styles.
+    * Cleaned up CSS code.
 * 0.1.4
-    * fixed bookmark of mines explotion in animations.
+    * Fixed bug in bookmark of mine explosion in animations.
     * CSS code more clean.
 * 0.1.3
     * Fixed some bugs.
-    * CSS code more clean.
+    * Improved cleanliness of CSS code.
 * 0.1.2
     * Main animation for cells fixed.
 * 0.1.1
