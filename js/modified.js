@@ -4,7 +4,7 @@
 let columns = 20;
 let rows = 20;
 let cells = rows*columns;
-let minesQuantity= 1;
+let minesQuantity= 80;
 let flagsQuantity = minesQuantity;
 let elementStyle;
 //positions vars
@@ -794,7 +794,63 @@ elementStyle.insertAdjacentHTML('beforeend', bookmarkAnim);
     congrats.className = 'congrats';
     congrats.innerText = 'Felicitaciones has ganado!';
     container.appendChild(congrats)};
-}
+
+    let menu = document.createElement('div');
+    menu.className = 'menu-container';
+    container.appendChild(menu);
+    menu.insertAdjacentHTML('beforeend', `
+    <div class="menu">
+    <p>level</p>
+    <div class="level">
+        <input class="radio-btn" type="radio" id="easy" name="button" value="easy"/>
+        <label for="easy" class="accordion-tab">easy</label>
+        <input class="radio-btn" checked="checked" type="radio" id="medium" name="button" value="medium"/>
+        <label for="medium" class="accordion-tab">medium</label>
+        <input class="radio-btn" type="radio" id="hard" name="button" value="hard"/>
+        <label for="hard" class="accordion-tab">hard</label>
+        <input class="radio-btn" type="radio" id="custom" name="button" value="custom"/>
+        <label for="custom" class="accordion-tab">custom</label>
+    </div>
+    <div class="inputs">
+    <form>
+    <p>Columns</p>
+
+    <div>
+    <input class="cols-quantity" type="range" name="colsRange" min="8" max="30" value="15" oninput="this.form.colsInput.value=this.value" />
+    <input class="cols-input" type="number" name="colsInput" min="8" max="30" value="16" oninput="this.form.colsRange.value=this.value" />
+    </div>
+    <p>Rows</p>  
+    <div>
+    <input class="rows-quantity" type="range" name="rowsRange" min="8" max="30" value="15" oninput="this.form.rowsInput.value=this.value" />
+    <input class="rows-input" type="number" name="rowsInput" min="8" max="30" value="16" oninput="this.form.rowsRange.value=this.value" />
+    </div>
+    <p>Mines</p>
+    <div>
+    <input class="mines-quantity" type="range" name="minesRange" min="8" max="400" value="60" oninput="this.form.minesInput.value=this.value" />
+    <input class="mines-input" type="number" name="minesInput" min="8" max="400" value="40" oninput="this.form.minesRange.value=this.value" />
+    </div>
+    </form>
+    </div>
+
+    <div data-dropup-auto="false" style="display: inline-block;" class="dropdown">
+    <p>theme</p>
+    <select>    
+    <option value='google'>Google Theme</option>
+    <option value='windows'>Classic Windows</option>  
+    <option value='pacman'>Pacman style</option>
+    </select>
+    </div>
+    <div class="buttons">
+        <button>Apply</button>
+        <button>Cancel</button>
+    </div>
+    </div>
+    `
+    )}
+
+
+
+
 
 
 function negativefn(){
@@ -869,7 +925,7 @@ for(let i=1; i<= 8;i++){
     }
 
 
-
+    
 
 }
 

@@ -56,6 +56,7 @@ The following contributors have contributed to this project and their contact in
 ## Version History
 * 0.1.8
     * Added config button.
+    * Added flags selection icon.
 * 0.1.7
     * Added start again button and win background.
     * Added congrats banner.
