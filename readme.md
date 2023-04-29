@@ -54,6 +54,9 @@ The following contributors have contributed to this project and their contact in
 - [@cartudev](https://github.com/cartudev/)
 
 ## Version History
+* 0.1.9
+    * Fixed bug in explode function using async function.
+    * Added config menu with sass code.
 * 0.1.8
     * Added config button.
     * Added flags selection icon.

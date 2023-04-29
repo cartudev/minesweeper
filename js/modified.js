@@ -4,7 +4,7 @@
 let columns = 20;
 let rows = 20;
 let cells = rows*columns;
-let minesQuantity= 80;
+let minesQuantity= 30;
 let flagsQuantity = minesQuantity;
 let elementStyle;
 //positions vars
@@ -37,6 +37,7 @@ let Colors = [['var(--exp_background1)', 'var(--exp_color1)'],
     ['#ED44B5','#9A2C76']]
 
 //defaults options timer
+let timerPause = false;
 let timer = 0;
 let control = setInterval(cronometro,1000)
 document.querySelector('.timer').innerHTML = timer.toString()
@@ -54,7 +55,8 @@ let newGameButtons = document.querySelectorAll('.newGame, .lose-retry-button, .c
 let listenerNewGame = newGameButtons.forEach(x => 
     x.addEventListener('click', function () {newGame()}, true)
  );
-console.log(newGameButtons)
+let configbtn = document.querySelector('.config-btn')
+configbtn.addEventListener('click', function ()  {config()}, true);
 content.addEventListener('click', function (event) { check(event, 'primary') }, true);
 content.addEventListener('contextmenu', function (event) { check(event, 'secondary') }, true);
 let fg = document.querySelector('.fg')
@@ -183,9 +185,10 @@ function cronometro(){
         control = null;
         return
     }
+    if(!timerPause){
     timer ++
     document.querySelector('.timer').innerHTML = timer.toString()
-
+    }
 }
 
 function lClick(position){
@@ -193,7 +196,7 @@ function lClick(position){
     if (checkeds.includes(position) && inexplode){
         return ;
     }
-    if (checkeds.includes(position) && !inexplode){
+    if (checkeds.includes(position) && !inexplode ){
         checkmines(position)
         return ;
     }
@@ -208,6 +211,15 @@ function lClick(position){
     if(GridComplete[position] == 0){
         positionRep.classList.replace('cell','number');   
         explode(position)
+    }
+    if (flagsPosition.indexOf(position) != -1 && inexplode){
+        let myIndex = flagsPosition.indexOf(position);
+        positionRep.classList.replace('flag','cell'),
+        positionRep.innerHTML = '',
+        flagsPosition.splice(myIndex, 1),
+        flagsQuantity += 1
+        document.querySelector('.mines').innerHTML = flagsQuantity.toString()
+        return lClick(position)
     }
     if (flagsPosition.indexOf(position) != -1){
         return ;
@@ -256,7 +268,6 @@ function flags(number){
         flagsPosition.push(number) ,
         flagsQuantity -= 1
     ) : (
-        console.log('aqui deberias de salir'),
         positionRep.classList.replace('flag','cell'),
         theme == 'googleStyle'? (
             positionRep.innerHTML = '',
@@ -264,7 +275,7 @@ function flags(number){
             `<div class="f-animation" style="animation: cellAnim${randomIntFromInterval(1,15)} ${randomFloatInterval(1,1.8,2)}s ease-in forwards; 
             -webkit-animation: cellAnim${randomIntFromInterval(1,15)} ${randomFloatInterval(1,1.8,2)}s ease-in forwards"</div>`)
         )
-        :(console.log('nothing to do here')),
+        :(console.log('')),
         flagsPosition.splice(myIndex, 1),
         flagsQuantity += 1
     )
@@ -375,7 +386,7 @@ function checkmines(position){
     }
 }
 
-function explode(position){
+async function explode(position){
     //    
     inexplode = true;
     //position
@@ -395,7 +406,7 @@ function explode(position){
     let p8 = p-c;
     let p9 = p-c+1;
     let number = position;
-
+    let results;
     if (checkeds.includes(position)){
 
     }
@@ -404,45 +415,71 @@ function explode(position){
     }
     if(indexFlag != -1){
         positionRep.classList.replace('flag','cell');
+        positionRep.innerHTML = '';
         flagsPosition.splice(indexFlag, 1)
         flagsQuantity += 1
         document.querySelector('.mines').innerHTML = flagsQuantity.toString()
+        console.log(inexplode)
     }
+
     if(number >columns && number <columns*(rows-1)&& number%columns != 0 && number%columns != 1){
-        np(p1); np(p2); np(p3); np(p4); np(p6); np(p7); np(p8); np(p9);
-        return inexplode = false;
+        let promise = Promise.resolve(np(p1), np(p2), np(p3), np(p4), np(p6), np(p7), np(p8), np(p9))
+        console.log(inexplode);
+        results = await promise
+        inexplode = false;
+        return ;
     }
     else{
         if (number == 1){
-            np(p2); np(p3); np(p6);
+            let promise = Promise.resolve(np(p2), np(p3), np(p6));
+            console.log(inexplode)
+            results = await promise
             return inexplode = false;
         }
         if (number == columns){
-            np(p1); np(p2); np(p4);
+            let promise = Promise.resolve(np(p1), np(p2), np(p4));
+            console.log(inexplode)
+            results = await promise
             return inexplode = false;
         }
         if (number == columns*(rows-1)+1){
-            np(p6); np(p8); np(p9);
+            let promise = Promise.resolve(np(p6), np(p8), np(p9));
+            console.log(inexplode)
+            results = await promise
             return inexplode = false;
         }
         if (number == columns*rows){
-            np(p4); np(p7); np(p8);
+            let promise = Promise.resolve(np(p4), np(p7), np(p8));
+            console.log(inexplode)
+            results = await promise
             return inexplode = false;
         }
         if (number<columns){
-            np(p1); np(p2); np(p3); np(p4); np(p6);
+            let promise = Promise.resolve(np(p1), np(p2), np(p3), np(p4), np(p6));
+            console.log(inexplode)
+            results = await promise
+
             return inexplode = false;
         }
         if (number>columns*rows-columns){
-            np(p4); np(p6); np(p7); np(p8); np(p9);
+            let promise = Promise.resolve(np(p4), np(p6), np(p7), np(p8), np(p9));
+            console.log(inexplode)
+            results = await promise
+
             return inexplode = false;
         }
         if (number%columns==0){
-            np(p1); np(p2); np(p4); np(p7); np(p8);
+            let promise = Promise.resolve(np(p1), np(p2), np(p4), np(p7), np(p8));
+            console.log(inexplode)
+            results = await promise
+
             return inexplode = false;
         }
         if (number%columns==1){
-            np(p2); np(p3); np(p6); np(p8); np(p9);
+            let promise = Promise.resolve(np(p2), np(p3), np(p6), np(p8), np(p9));
+            console.log(inexplode)
+            results = await promise
+
             return inexplode = false;
         }
     }
@@ -497,6 +534,32 @@ function newGame(){
     else {
         document.querySelector('.congrats').style.display = 'none'
         document.querySelector('.lose').style.display = 'none'}
+}
+
+function config(){
+    timerPause = true;
+    let menuContainer = document.querySelector('.menu-container');
+    menuContainer.classList.add('toggle');
+    let cancelBtn = document.querySelector('.cancel-btn');
+    let applyBtn = document.querySelector('.apply-btn');
+    function closing()
+        {menuContainer.classList.remove('toggle')
+        timerPause = false
+    }
+    applyBtn.addEventListener('click', function() {
+        closing();
+        newGame()}, true);
+    cancelBtn.addEventListener('click', function() {closing()});
+    
+    
+    
+    
+    
+    applyBtn.removeEventListener('click', function() {
+        closing();
+        newGame()});
+    cancelBtn.removeEventListener('click', function() {closing()});
+
 }
 
 
@@ -841,8 +904,8 @@ elementStyle.insertAdjacentHTML('beforeend', bookmarkAnim);
     </select>
     </div>
     <div class="buttons">
-        <button>Apply</button>
-        <button>Cancel</button>
+        <button class="apply-btn">Apply</button>
+        <button class="cancel-btn">Cancel</button>
     </div>
     </div>
     `
