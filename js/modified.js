@@ -206,11 +206,17 @@ function lClick(position){
     if(GridComplete[position] == 'm'){
         losefn(position)
         return ;}
-    let positionRep = content.children[parseInt((position-1)/columns)].children[(position-1)%columns]
-
+    let positionRep = content.children[parseInt((position-1)/columns)].children[parseInt((position-1)%columns)]
+        console.log('aqui no rompe1')
     if(GridComplete[position] == 0){
+        console.log('aqui no rompe2')
+
         positionRep.classList.replace('cell','number');   
+        console.log('aqui no rompe3')
+
         explode(position)
+        console.log('aqui no rompe4')
+
     }
     if (flagsPosition.indexOf(position) != -1 && inexplode){
         let myIndex = flagsPosition.indexOf(position);
@@ -485,18 +491,30 @@ async function explode(position){
     }
 }
 //restart
-function newGame(){
-    win ? butn.classList.replace('winbtn', 'newGame'): null;
-    loses ? butn.classList.replace('losebtn', 'newGame'): null;
-    let cellactive = document.querySelectorAll('.cell-active');
-    for(let i = 0; i< cellactive.length;i++){cellactive[i].remove()}
-    //positions vars
+function newGame(colsOptions = 16, rowsOptions = 16, minesOptions = 40){
+    document.body.innerHTML = ''
+    columns = colsOptions;
+    rows = rowsOptions;
+    minesQuantity = minesOptions;
+    cells = rows*columns;
+    flagsQuantity = minesQuantity;
     minesPositions = [];
     numbersList= [];
     checkeds = [];
     GridComplete = [null]
     flagsPosition = []
-    flagsQuantity = minesQuantity;
+    theme = "googleStyle"
+    document.getElementsByTagName('head')[0].getElementsByTagName('style')[1].remove()
+    templategen()
+
+/* 
+    win ? butn.classList.replace('winbtn', 'newGame'): null;
+    loses ? butn.classList.replace('losebtn', 'newGame'): null;
+
+ */
+/*     let cellactive = document.querySelectorAll('.cell-active');
+    for(let i = 0; i< cellactive.length;i++){cellactive[i].remove()}
+ */    //positions vars
     //default options timer
     stopTimer();
     timer = 0;
@@ -510,8 +528,13 @@ function newGame(){
     //booleans
     win = false;
     loses = false;
+
+    inexplode = false;
+    invertClick = false;
+
+    gridCreation()
     //reset all
-    for (let i = 0; i < rows; i++){
+/*     for (let i = 0; i < rows; i++){
         for (let j = 0; j < columns; j++){
             content.children[i].children[j].classList.replace('flagerror','cell');
             content.children[i].children[j].classList.replace('flag','cell');
@@ -519,9 +542,22 @@ function newGame(){
             content.children[i].children[j].innerHTML = '';
             content.children[i].children[j].classList.remove("n0", "n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "nm");
         }
-    }
-    gridCreation()
+    } */
 
+    //listeners buttons and selectors
+    content = document.querySelector('.contenedor')
+    newGameButtons = document.querySelectorAll('.newGame, .lose-retry-button, .congrats-retry-button')  //.addEventListener('click', function () {newGame()}, true)
+    listenerNewGame = newGameButtons.forEach(x => 
+        x.addEventListener('click', function () {newGame()}, true)
+    );
+    configbtn = document.querySelector('.config-btn')
+    configbtn.addEventListener('click', function ()  {config()}, true);
+    content.addEventListener('click', function (event) { check(event, 'primary') }, true);
+    content.addEventListener('contextmenu', function (event) { check(event, 'secondary') }, true);
+    fg = document.querySelector('.fg')
+    fg.addEventListener('click', function () {invert()}, true)
+
+    
     if(theme == 'googleStyle')  {
         // console.log(),
     document.querySelector('.lose-container').style.display = 'none';
@@ -540,7 +576,24 @@ function config(){
     timerPause = true;
     let menuContainer = document.querySelector('.menu-container');
     menuContainer.classList.add('toggle');
-    let cancelBtn = document.querySelector('.cancel-btn');
+    let levels = document.querySelectorAll('input[name="level"]');
+    let rangeInput = document.querySelectorAll('input[type="range"]');
+    let numberInput = document.querySelectorAll('input[type="number"]');
+
+    rangeInput.forEach(x => 
+        x.addEventListener('click', function () {inputChange()}, true)
+     );
+     numberInput.forEach(x => 
+        x.addEventListener('click', function () {inputChange()}, true)
+     );
+
+     
+     
+     levels.forEach(x => 
+        x.addEventListener('click', function () {levelselected()}, true)
+        );
+        
+        let cancelBtn = document.querySelector('.cancel-btn');
     let applyBtn = document.querySelector('.apply-btn');
     function closing()
         {menuContainer.classList.remove('toggle')
@@ -548,17 +601,98 @@ function config(){
     }
     applyBtn.addEventListener('click', function() {
         closing();
-        newGame()}, true);
+        fastCheck()}, true);
     cancelBtn.addEventListener('click', function() {closing()});
-    
     
     
     
     
     applyBtn.removeEventListener('click', function() {
         closing();
-        newGame()});
-    cancelBtn.removeEventListener('click', function() {closing()});
+        fastCheck()});
+        cancelBtn.removeEventListener('click', function() {closing()});
+    }
+    
+    function fastCheck(){
+        let minesInput = parseInt(document.getElementById("mines").children[0].value)
+        let rowsInput = parseInt(document.getElementById("rows").children[0].value)
+        let colsInput = parseInt(document.getElementById("cols").children[0].value)
+    return newGame(colsInput, rowsInput, minesInput);   
+    }
+    function inputChange(){
+        let levels = document.querySelectorAll('input[name="level"]');
+
+        let minesInput = document.getElementById("mines").children
+        let rowsInput = document.getElementById("rows").children
+        let colsInput = document.getElementById("cols").children
+        if (document.querySelector('input[name="level"]:checked').value != 'custom'){
+        levels[3].click()}
+        minesInput[0].setAttribute("max", rowsInput[0].value*colsInput[0].value-1);
+        minesInput[1].setAttribute("max", rowsInput[0].value*colsInput[0].value-1);
+        let max = minesInput[0].max
+        if(minesInput[0].max < minesInput[1].value || minesInput[1].max < minesInput[1].value){
+            document.getElementById("mines").innerHTML = '<input class="mines-quantity" type="range" name="minesRange" min="1" max="'+max+'" value="'+max+'" oninput="this.form.minesInput.value=this.value" /><input class="mines-input" type="number" name="minesInput" min="1" max="'+max+'" value="'+max+'" oninput="this.form.minesRange.value=this.value" />'
+        }
+        return
+    }
+
+
+    function levelselected(){
+        let minesInput = document.getElementById("mines").children
+        let rowsInput = document.getElementById("rows").children
+        let colsInput = document.getElementById("cols").children
+
+        let level = document.querySelector('input[name="level"]:checked').value;
+        if (level == 'easy'){
+            
+            rowsInput[0].value = 9;
+            rowsInput[1].value = 9;
+            
+            colsInput[0].value = 9;
+            colsInput[1].value = 9;
+
+            minesInput[0].setAttribute("max", rowsInput[0].value*colsInput[0].value)
+            minesInput[1].setAttribute("max", rowsInput[0].value*colsInput[0].value)
+            
+            minesInput[0].value = 10;
+            minesInput[1].value = 10;
+        }
+        if (level == 'normal'){
+            
+            rowsInput[0].value = 16;
+            rowsInput[1].value = 16;
+
+            colsInput[0].value = 16;
+            colsInput[1].value = 16;
+            
+            minesInput[0].setAttribute("max", rowsInput[0].value*colsInput[0].value)
+            minesInput[1].setAttribute("max", rowsInput[0].value*colsInput[0].value)
+            
+            minesInput[0].value = 40;
+            minesInput[1].value = 40;
+
+        }
+        if (level == 'hard'){
+            
+            rowsInput[0].value = 19;
+            rowsInput[1].value = 19;
+            
+            colsInput[0].value = 30;
+            colsInput[1].value = 30;
+
+            minesInput[0].setAttribute("max", rowsInput[0].value*colsInput[0].value)
+            minesInput[1].setAttribute("max", rowsInput[0].value*colsInput[0].value)
+            
+            minesInput[0].value = 99;
+            minesInput[1].value = 99;
+        }
+        else {
+            minesInput[0].setAttribute("max", rowsInput[0].value*colsInput[0].value)
+            minesInput[1].setAttribute("max", rowsInput[0].value*colsInput[0].value)
+        }
+
+    return
+    
 
 }
 
@@ -865,32 +999,32 @@ elementStyle.insertAdjacentHTML('beforeend', bookmarkAnim);
     <div class="menu">
     <p>level</p>
     <div class="level">
-        <input class="radio-btn" type="radio" id="easy" name="button" value="easy"/>
+        <input class="radio-btn" type="radio" id="easy" name="level" value="easy"/>
         <label for="easy" class="accordion-tab">easy</label>
-        <input class="radio-btn" checked="checked" type="radio" id="medium" name="button" value="medium"/>
+        <input class="radio-btn" checked="checked" type="radio" id="medium" name="level" value="normal"/>
         <label for="medium" class="accordion-tab">medium</label>
-        <input class="radio-btn" type="radio" id="hard" name="button" value="hard"/>
+        <input class="radio-btn" type="radio" id="hard" name="level" value="hard"/>
         <label for="hard" class="accordion-tab">hard</label>
-        <input class="radio-btn" type="radio" id="custom" name="button" value="custom"/>
+        <input class="radio-btn" type="radio" id="custom" name="level" value="custom"/>
         <label for="custom" class="accordion-tab">custom</label>
     </div>
     <div class="inputs">
     <form>
     <p>Columns</p>
 
-    <div>
-    <input class="cols-quantity" type="range" name="colsRange" min="8" max="30" value="15" oninput="this.form.colsInput.value=this.value" />
+    <div id="cols">
+    <input class="cols-quantity" type="range" name="colsRange" min="8" max="30" value="16" oninput="this.form.colsInput.value=this.value" />
     <input class="cols-input" type="number" name="colsInput" min="8" max="30" value="16" oninput="this.form.colsRange.value=this.value" />
     </div>
     <p>Rows</p>  
-    <div>
-    <input class="rows-quantity" type="range" name="rowsRange" min="8" max="30" value="15" oninput="this.form.rowsInput.value=this.value" />
+    <div id="rows">
+    <input class="rows-quantity" type="range" name="rowsRange" min="8" max="30" value="16" oninput="this.form.rowsInput.value=this.value" />
     <input class="rows-input" type="number" name="rowsInput" min="8" max="30" value="16" oninput="this.form.rowsRange.value=this.value" />
     </div>
     <p>Mines</p>
-    <div>
-    <input class="mines-quantity" type="range" name="minesRange" min="8" max="400" value="60" oninput="this.form.minesInput.value=this.value" />
-    <input class="mines-input" type="number" name="minesInput" min="8" max="400" value="40" oninput="this.form.minesRange.value=this.value" />
+    <div id="mines">
+    <input class="mines-quantity" type="range" name="minesRange" min="1" max="256" value="40" oninput="this.form.minesInput.value=this.value" />
+    <input class="mines-input" type="number" name="minesInput" min="1" max="256" value="40" oninput="this.form.minesRange.value=this.value" />
     </div>
     </form>
     </div>
@@ -899,8 +1033,8 @@ elementStyle.insertAdjacentHTML('beforeend', bookmarkAnim);
     <p>theme</p>
     <select>    
     <option value='google'>Google Theme</option>
-    <option value='windows'>Classic Windows</option>  
-    <option value='pacman'>Pacman style</option>
+    <option disabled value='windows'>Classic Windows (w.i.p)</option>  
+    <option disabled value='pacman'>Pacman style (w.i.p)</option>
     </select>
     </div>
     <div class="buttons">
