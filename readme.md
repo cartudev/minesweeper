@@ -6,6 +6,7 @@ A minesweeper game in vainilla js.
 
 This project started as a simple HTML/CSS/JS practice exercise, and now I'm turning it into a practical modular project to improve readability. The first release comes bundled with Sass and Vite, although it may not be functional yet because the bundle has not been configured properly.
 
+
 <!-- 
 ## Getting Started
 
