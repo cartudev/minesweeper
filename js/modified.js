@@ -508,7 +508,7 @@ function newGame(colsOptions = 16, rowsOptions = 16, minesOptions = 40){
     GridComplete = [null]
     flagsPosition = []
     theme = "googleStyle"
-    document.getElementsByTagName('head')[0].getElementsByTagName('style')[1].remove()
+    elementStyle = ''
     gridCreation()
     stopTimer();
     timer = 0;
