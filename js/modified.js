@@ -207,15 +207,11 @@ function lClick(position){
         losefn(position)
         return ;}
     let positionRep = content.children[parseInt((position-1)/columns)].children[parseInt((position-1)%columns)]
-        console.log('aqui no rompe1')
     if(GridComplete[position] == 0){
-        console.log('aqui no rompe2')
 
         positionRep.classList.replace('cell','number');   
-        console.log('aqui no rompe3')
 
         explode(position)
-        console.log('aqui no rompe4')
 
     }
     if (flagsPosition.indexOf(position) != -1 && inexplode){
@@ -898,7 +894,7 @@ elementStyle.insertAdjacentHTML('beforeend', bookmarkAnim);
     let divfs = document.createElement('div');
     let header = document.createElement('header');
     let section = document.createElement('section');
-    divfs.className ='full-screen';
+    divfs.className ='full-screen google';
     document.body.appendChild(divfs);
     let container = document.createElement('div');
     container.className = 'container';
