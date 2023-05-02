@@ -1,10 +1,10 @@
 
 
 //grid
-let columns = 20;
-let rows = 20;
+let columns = 16;
+let rows = 16;
 let cells = rows*columns;
-let minesQuantity= 30;
+let minesQuantity= 40;
 let flagsQuantity = minesQuantity;
 let elementStyle;
 //positions vars
@@ -493,6 +493,10 @@ async function explode(position){
 //restart
 function newGame(colsOptions = 16, rowsOptions = 16, minesOptions = 40){
     document.body.innerHTML = ''
+    for (var i=0; i<myTimeout.length; i++) {
+    clearTimeout(myTimeout[i]);
+      }
+
     columns = colsOptions;
     rows = rowsOptions;
     minesQuantity = minesOptions;
@@ -505,6 +509,10 @@ function newGame(colsOptions = 16, rowsOptions = 16, minesOptions = 40){
     flagsPosition = []
     theme = "googleStyle"
     document.getElementsByTagName('head')[0].getElementsByTagName('style')[1].remove()
+    gridCreation()
+    stopTimer();
+    timer = 0;
+    
     templategen()
 
 /* 
@@ -516,15 +524,10 @@ function newGame(colsOptions = 16, rowsOptions = 16, minesOptions = 40){
     for(let i = 0; i< cellactive.length;i++){cellactive[i].remove()}
  */    //positions vars
     //default options timer
-    stopTimer();
-    timer = 0;
     document.querySelector('.mines').innerHTML = flagsQuantity.toString();
     document.querySelector('.timer').innerHTML = timer.toString()
-    control = setInterval(cronometro,1000)
-    for (var i=0; i<myTimeout.length; i++) {
-    clearTimeout(myTimeout[i]);
-      }
     myTimeout = [];
+    control = setInterval(cronometro,1000)
     //booleans
     win = false;
     loses = false;
@@ -532,7 +535,6 @@ function newGame(colsOptions = 16, rowsOptions = 16, minesOptions = 40){
     inexplode = false;
     invertClick = false;
 
-    gridCreation()
     //reset all
 /*     for (let i = 0; i < rows; i++){
         for (let j = 0; j < columns; j++){
