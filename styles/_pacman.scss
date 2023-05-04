@@ -1,0 +1,431 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+
+.pacman{
+    background-color: black;
+    margin: 0;
+    padding: 0;
+    font-family: 'Press Start 2P', cursive;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+
+    .cell{
+        clip-path: polygon(
+        0px 8px,
+        4px 8px,
+        4px 4px,
+        8px 4px,
+        8px 0px,
+        calc(100% - 8px) 0px,
+        calc(100% - 8px) 4px,
+        calc(100% - 4px) 4px,
+        calc(100% - 4px) 8px,
+        100% 8px,
+        100% calc(100% - 8px),
+        calc(100% - 4px) calc(100% - 8px),
+        calc(100% - 4px) calc(100% - 4px),
+        calc(100% - 8px) calc(100% - 4px),
+        calc(100% - 8px) 100%,
+        8px 100%,
+        8px calc(100% - 4px),
+        4px calc(100% - 4px),
+        4px calc(100% - 8px),
+        0px calc(100% - 8px)
+      );
+        font-family: 'Press Start 2P', cursive;
+        line-height: 50%;
+        font-size: 2.0rem;
+        color: white;
+        margin: auto;
+        margin-right: -4px;
+        padding-left: 5px;
+        text-align: center;
+        display: block;
+        width: 50px;
+        height: 50px;
+        border: 8px solid blue;
+        
+    }
+    
+    
+    .cell::before,.cell::after{
+        
+    position: relative;
+    }
+    
+    .cell::before{
+        content: '.';
+    
+    }
+    
+    .cell::after{
+        
+    right: 0px
+    }
+    
+    
+    
+    .container{
+    
+        padding: 10px;
+        width: fit-content;
+        height: fit-content;
+        box-sizing: border-box;
+        margin:-1px auto;
+    
+    }
+    
+    .header{
+        position: relative;
+        margin: auto;
+        width: 100%;
+        height: 15vh;
+        display: flex;
+        top: 0px;
+        background-color: #000;
+        justify-content: center;
+        align-items: center;
+    }
+    .section{
+        margin: auto;
+        display: block;
+        width: fit-content;
+        height: fit-content;
+        background-color: rgb(0, 247, 255);
+    
+    }.contenedor{
+        position: sticky;
+        background-color: #000;
+        margin: 0 auto;
+    }
+    
+    .row{
+        width: fit-content;
+        height: fit-content;
+        margin: 0 auto;
+        display: flex;
+    }
+    
+    .info{
+        display:flex;
+        width:100%;
+        height: 100%;
+        margin: 0;
+        background-color: #000;
+        color: #fff;
+        
+    }
+    
+    .btn{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        margin: auto;
+        font-size: 2em;
+        transition: background-color 0.5s
+    }
+        
+    
+    .btn:hover {
+        cursor: default;
+    
+    
+    }
+    .newGame{
+        image-rendering: pixelated;
+        /* border: #fff solid 1px; */
+    
+        width: 16px;
+        height: 16px;
+        transform: scale(3);
+        background: url("Pacman-sprites.png");
+        animation: pacman 0.3s steps(1) infinite;
+    }
+    .newGame:hover{
+        animation-play-state: paused;
+    }
+    
+    
+    @keyframes pacman{
+        0% { background-position: -3px 0px; }
+        25%,75% { background-position: -19px 0px; }
+        50% { background-position: -35px 0px; }
+    
+    }
+    
+    .losebtn{
+        image-rendering: pixelated;
+        width: 16px;
+        height: 16px;
+        transform: scale(3);
+        background: url("Pacman-sprites.png");
+        background-position: -210px 0px;
+        animation: pacmand 1s steps(11);
+        /* border: #fff solid 1px; */
+    }
+    
+        @keyframes pacmand{
+            from{ background-position: -50px 0px; }
+            to{ background-position: -226px 0px; }
+        }
+    
+    
+    .winbtn{
+        margin: auto;
+        text-align: center;
+        display: block;
+        width: 16px;
+        height: 16px;
+        transform: scale(3);
+    
+        image-rendering: pixelated; 
+        background: url("Pacman-sprites.png") -34px -49px;
+    }
+    
+    
+    .fg::before{
+        cursor: default;
+        content: '.';
+    }
+    .mn{
+        margin: auto;
+        text-align: center;
+        display: block;
+        width: 16px;
+        height: 16px;
+        transform: scale(3);
+    
+        image-rendering: pixelated; 
+        background: url("Pacman-sprites.png") -130px -49px;
+    
+    
+    
+    }
+    .mines{
+        text-align: center;
+        line-height: 1.5em;
+        margin: auto;
+        padding: 8px;
+        color:#fff;
+        font-size: 25px;
+        font-weight: bolder;
+    
+    }
+    
+    .mines::before{
+        content: 'Bells \a   ';
+        white-space: pre
+    
+    
+    }
+      
+      
+      .timer{
+        text-align: center;
+        line-height: 1.5em;
+        margin: auto;
+        padding: 8px;
+        font-weight: bolder;
+        color:#fff;
+        font-size: 25px;
+    
+    }
+    .timer::before{
+        content: 'Time \a   ';
+        white-space: pre
+    }
+    
+    .number{
+        clip-path: polygon(
+        0px 8px,
+        4px 8px,
+        4px 4px,
+        8px 4px,
+        8px 0px,
+        calc(100% - 8px) 0px,
+        calc(100% - 8px) 4px,
+        calc(100% - 4px) 4px,
+        calc(100% - 4px) 8px,
+        100% 8px,
+        100% calc(100% - 8px),
+        calc(100% - 4px) calc(100% - 8px),
+        calc(100% - 4px) calc(100% - 4px),
+        calc(100% - 8px) calc(100% - 4px),
+        calc(100% - 8px) 100%,
+        8px 100%,
+        8px calc(100% - 4px),
+        4px calc(100% - 4px),
+        4px calc(100% - 8px),
+        0px calc(100% - 8px)
+      );
+        font-family: 'Press Start 2P', cursive;
+        line-height: 150%;
+        font-size: 1.5em;
+        color: white;
+        margin: auto;
+        margin-right: -4px;
+        text-align: center;
+        display: block;
+        width: 50px;
+        height: 50px;
+        border: 8px solid blue;
+    }
+    
+    
+    .number::before{
+        position: relative;
+        left: 1px;
+        bottom: 0vh;
+    }
+    
+    
+    .n1::before{
+        color:#fff;
+        content: '1';
+    }
+    .n2::before{
+        color:#fff;
+        content: '2';
+    }
+    .n3::before{
+        color:#fff;
+        content: '3';
+    }
+    .n4::before{
+        color:#fff;
+        content: '4';
+    }
+    .n5::before{
+        color:#fff;
+        content: '5';
+    }
+    .n6::before{
+        color:#fff;
+        content: '6';
+    }
+    .n7::before{
+        color:#fff;
+        content: '7';
+    }
+    .n8::before{
+        color:#fff;
+        content: '8';
+    }
+    .nm{
+        width: 50px;
+        height: 50px;
+        cursor: default;
+        image-rendering: pixelated; 
+        background: url("Pacman-sprites.png") 0px 0px;
+        animation: ghost 1s steps(1) infinite;
+        background-size: 1500%;
+    }
+    
+    @keyframes ghost{
+        0% { background-position: -7px -145px; }
+        12.5%{ background-position: -43px -145px; }
+        25% { background-position: -79px -145px; }
+        37.5% { background-position: -115px -145px; }
+        50% { background-position: -151px -145px; }
+        62.5% { background-position: -187px -145px; }
+        75% { background-position: -223px -145px; }
+        87.5% { background-position: -259px -145px; }
+        100% { background-position: -285px -145px; }
+     
+    }
+    
+    .n0{
+        width: 50px;
+        height: 50px;
+        cursor: default;
+        image-rendering: pixelated; 
+        background: url("Pacman-sprites.png");
+        animation: ghostrunning 0.5s steps(4) infinite;
+        background-size: 1500%;
+    }
+    
+    @keyframes ghostrunning{
+        from { background-position: -295px -145px; }
+        to{ background-position: -440px -145px; }
+     
+    }
+    
+    .flag{
+    
+            clip-path: polygon(
+            0px 8px,
+            4px 8px,
+            4px 4px,
+            8px 4px,
+            8px 0px,
+            calc(100% - 8px) 0px,
+            calc(100% - 8px) 4px,
+            calc(100% - 4px) 4px,
+            calc(100% - 4px) 8px,
+            100% 8px,
+            100% calc(100% - 8px),
+            calc(100% - 4px) calc(100% - 8px),
+            calc(100% - 4px) calc(100% - 4px),
+            calc(100% - 8px) calc(100% - 4px),
+            calc(100% - 8px) 100%,
+            8px 100%,
+            8px calc(100% - 4px),
+            4px calc(100% - 4px),
+            4px calc(100% - 8px),
+            0px calc(100% - 8px)
+          );
+            margin: auto;
+            margin-right: -4px;
+            text-align: center;
+            display: block;
+            width: 50px;
+            height: 50px;
+            border: 8px solid blue;
+            image-rendering: pixelated; 
+            background: url("Pacman-sprites.png") -295px -110px;
+            background-size: 1500%;
+    
+        }
+      
+      
+    
+      .flagerror{
+    
+            clip-path: polygon(
+            0px 8px,
+            4px 8px,
+            4px 4px,
+            8px 4px,
+            8px 0px,
+            calc(100% - 8px) 0px,
+            calc(100% - 8px) 4px,
+            calc(100% - 4px) 4px,
+            calc(100% - 4px) 8px,
+            100% 8px,
+            100% calc(100% - 8px),
+            calc(100% - 4px) calc(100% - 8px),
+            calc(100% - 4px) calc(100% - 4px),
+            calc(100% - 8px) calc(100% - 4px),
+            calc(100% - 8px) 100%,
+            8px 100%,
+            8px calc(100% - 4px),
+            4px calc(100% - 4px),
+            4px calc(100% - 8px),
+            0px calc(100% - 8px)
+          );
+          margin: auto;
+          margin-right: -4px;
+          text-align: center;
+          display: block;
+          width: 50px;
+          height: 50px;
+          border: 8px solid blue;
+          image-rendering: pixelated; 
+          background: url("Pacman-sprites.png") -474px -7px;
+          background-size: 1500%;
+    
+      }
+
+}

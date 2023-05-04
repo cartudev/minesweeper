@@ -7,9 +7,6 @@ font-family: 'Tinos', serif;
 
 
 *{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
     --exp_background1 : #277BCD;
     --exp_color1 : #2F569A;
     --exp_background2 : #388E3C;
@@ -445,7 +442,6 @@ body{
             left: 0;
             display: none;
             z-index: 45;
-
         }
         .menu-container{
             .menu{
