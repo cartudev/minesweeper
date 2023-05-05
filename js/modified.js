@@ -1,40 +1,8 @@
 import { grid, selectors } from './configs'
+import { functionsLogicLayout, functionsGamePlay } from './functions';
 
 
-
-/* let grid = {
-    columns : 16,
-    rows : 16,
-    get cells() { return (this.columns * this.rows)},
-    minesQuantity : 40,
-    flagsQuantity : 40,
-    minesPositions : [],
-    numbersList : [],
-    checkeds : [],
-    gridComplete : [null],
-    flagsPosition : [],
-    themes:['google', 'windows', 'pacman'],
-    theme: 'google',
-    headStyle: undefined
-} */
-
-
-
-//grid
-/* let columns = 16;
-let rows = 16;
-let cells = rows*columns;
-let minesQuantity= 40;
-let flagsQuantity = minesQuantity; */
-//positions vars
-/* let minesPositions = [];
-let numbersList= [];
-let checkeds = [];
-let GridComplete = [null]
-let flagsPosition = []
-let theme = "google"
-let headStyle;
- */templategen()
+templategen()
 let myTimeout = []
 
 
@@ -63,8 +31,6 @@ let control = setInterval(cronometro,1000)
 selectors.timer.innerHTML = timer.toString()
 
 selectors.mines.innerHTML = grid.flagsQuantity.toString()
-
-let butn = document.querySelector('.newGame')
 //booleans
 
 //listeners buttons and selectors
@@ -74,123 +40,10 @@ let listenerNewGame = newGameButtons.forEach(x =>
  );
 let configbtn = document.querySelector('.config-btn')
 configbtn.addEventListener('click', function ()  {config()}, true);
-selectors.content.addEventListener('click', function (event) { check(event, 'primary') }, true);
-selectors.content.addEventListener('contextmenu', function (event) { check(event, 'secondary') }, true);
+selectors.content.addEventListener('click', function (event) {functionsGamePlay.check(event, 'primary') }, true);
+selectors.content.addEventListener('contextmenu', function (event) { functionsGamePlay.check(event, 'secondary') }, true);
 let fg = document.querySelector('.fg')
-fg.addEventListener('click', function () {invert()}, true)
-
-//grid creation
-export function gridCreation() {
-    for (let i = 1; i <= grid.cells; i++) {
-        grid.numbersList.push(i)
-    };
-    for (let i = 1; i <= grid.minesQuantity; i++) {
-        let random = (Math.floor(Math.random() * grid.numbersList.length))
-        let addnumber = grid.numbersList.splice(random, 1)
-        grid.minesPositions.push(addnumber[0])
-    }
-    grid.minesPositions.sort((a, b) => a - b)
-    for (let i = 0; i <= grid.minesPositions.length; i++) {
-        grid.numbersList.splice(grid.minesPositions[i - 1], 0, 'm')
-    }
-    grid.numbersList.splice(0, 1, null)
-    gridCompleteCreation()
-}
-
-function gridCompleteCreation(){
-    for(let i = 1; i<=grid.cells;i++){
-       numbersPosition(i) 
-    }
-};
-
-function numbersPosition(number){
-    let n = number
-    if(grid.numbersList[number] == 'm'){
-        grid.gridComplete.push(grid.numbersList[number])
-        return ;
-    }
-    if(number >grid.columns && number <grid.columns*(grid.rows-1)&& number%grid.columns != 0 && number%grid.columns != 1){
-        return calc(n, 1, 2, 3, 4, 6, 7, 8, 9)
-    }
-    else{
-        if (number == 1){
-            return calc(n, 2, 3, 6)
-        }
-        if (number == grid.columns){
-            return calc(n, 1, 2, 4)
-        }
-        if (number == grid.columns*(grid.rows-1)+1){
-            return calc(n, 6, 8, 9)
-        }
-        if (number == grid.columns*grid.rows){
-            return calc(n, 4, 7, 8)
-        }
-        if (number<grid.columns){
-            return calc(n, 1, 2, 3, 4, 6)
-        }
-        if (number>grid.columns*grid.rows-grid.columns){
-            return calc(n, 4, 6, 7, 8, 9)
-        }
-        if (number%grid.columns==0){
-            return calc(n, 1, 2, 4, 7, 8)
-        }
-        if (number%grid.columns==1){
-            return calc(n, 2, 3, 6, 8, 9)
-        }
-    }
-};
-
-//check the position of the click and the invert button
-function check(event, action){
-    if(event.composedPath()[0].classList[0] == 'cell' || 
-    event.composedPath()[0].classList[0] == 'number' || 
-    event.composedPath()[0].classList[0] == 'flag'){
-        const position = 
-        parseInt(event.composedPath()[0].classList[1].match(/\d+/)) + 
-        ((parseInt(event.composedPath()[1].classList[1].match(/\d+/))-1)*grid.columns);
-
-    if(grid.checkeds.includes(position)){
-        event.preventDefault();
-        return lClick(position);
-    }
-    if (action == 'primary' && grid.invertClick == false || action == 'secondary' && grid.invertClick == true){
-        event.preventDefault();
-        return lClick(position);
-    }
-
-    if (action == 'secondary' && grid.invertClick == false || action == 'primary' && grid.invertClick == true){
-        event.preventDefault()
-        flags(position)
-        return ;
-    }
-    }
-    if(event.composedPath()[0].parentElement.children[0].classList[0] == 'wait-to-kill'){
-        event.preventDefault()
-        return;
-    }
-
-    if(event.composedPath()[1].classList[0] == 'flag'){
-        event.preventDefault()
-        const position = 
-        parseInt(event.composedPath()[1].classList[1].match(/\d+/)) + 
-        ((parseInt(event.composedPath()[2].classList[1].match(/\d+/))-1)*grid.columns);
-
-        flags(position)
-    }
-
-    else{return ;}
-};
-
-function invert(){
-if(fg.classList[1]== 'fg'){
-    fg.classList.replace('fg','mn')
-    grid.invertClick = true;
-}
-else{fg.classList.replace('mn','fg')
-    grid.invertClick = false;
-}
-
-}
+fg.addEventListener('click', function () {functionsGamePlay.invert()}, true)
 
 //function for timers
 function stopTimer(){
@@ -208,293 +61,9 @@ function cronometro(){
     }
 }
 
-function lClick(position){
 
-    if (grid.checkeds.includes(position) && grid.inexplode){
-        return ;
-    }
-    if (grid.checkeds.includes(position) && !grid.inexplode ){
-        checkmines(position)
-        return ;
-    }
-    if(grid.loses == true){
-        return ;
-    }
-    if(grid.gridComplete[position] == 'm'){
-        losefn(position)
-        return ;}
-    let positionRep = selectors.content.children[parseInt((position-1)/grid.columns)].children[parseInt((position-1)%grid.columns)]
-    if(grid.gridComplete[position] == 0){
-
-        positionRep.classList.replace('cell','number');   
-
-        explode(position)
-
-    }
-    if (grid.flagsPosition.indexOf(position) != -1 && grid.inexplode){
-        let myIndex = grid.flagsPosition.indexOf(position);
-        positionRep.classList.replace('flag','cell'),
-        positionRep.innerHTML = '',
-        grid.flagsPosition.splice(myIndex, 1),
-        grid.flagsQuantity += 1
-        selectors.mines.innerHTML = grid.flagsQuantity.toString()
-        return lClick(position)
-    }
-    if (grid.flagsPosition.indexOf(position) != -1){
-        return ;
-    }
-    else{
-        
-        positionRep.classList.replace('cell','number');
-        if(!grid.checkeds.includes(position)){
-        positionRep.classList.add(`n${grid.gridComplete[position]}`);
-        if(grid.theme == grid.themes[0]){
-            animationCell(positionRep)
-        }
-    }
-    }
-    if (grid.checkeds.includes(position)){
-        return ;
-    }
-    else{
-        grid.checkeds.push(position)}
-    if(grid.checkeds.length == grid.cells-grid.minesQuantity){
-
-        winfn()       
-        return;
-    }
-}
-
-
-
-function flags(number){
-    if (grid.checkeds.includes(number)){
-        return
-    }
-    if(grid.loses == true){
-        return
-    }
-    let myIndex = grid.flagsPosition.indexOf(number);
-    let positionRep = selectors.content.children[parseInt((number-1)/grid.columns)].children[(number-1)%grid.columns]
-    
-    myIndex == -1 ? (
-        positionRep.classList.replace('cell','flag'),
-        grid.theme == grid.themes[0]? (
-        positionRep.innerHTML = '',
-        positionRep.insertAdjacentHTML('beforeend',
-        `<div class="f-animation" </div>`
-        )) : (console.log()),
-        grid.flagsPosition.push(number) ,
-        grid.flagsQuantity -= 1
-    ) : (
-        positionRep.classList.replace('flag','cell'),
-        grid.theme == grid.themes[0]? (
-            positionRep.innerHTML = '',
-            positionRep.insertAdjacentHTML('beforeend',     
-            `<div class="f-animation" style="animation: cellAnim${randomIntFromInterval(1,15)} ${randomFloatInterval(1,1.8,2)}s ease-in forwards; 
-            -webkit-animation: cellAnim${randomIntFromInterval(1,15)} ${randomFloatInterval(1,1.8,2)}s ease-in forwards"</div>`)
-        )
-        :(console.log('')),
-        grid.flagsPosition.splice(myIndex, 1),
-        grid.flagsQuantity += 1
-    )
-    selectors.mines.innerHTML = grid.flagsQuantity.toString()
-}
-function winfn(){
-    butn.classList.replace('newGame', 'winbtn');
-    grid.theme == grid.themes[0] ? (document.querySelector('.congrats-container').style.display = 'block') : (document.querySelector('.congrats').style.display = 'block')
-    grid.win = true;
-}
-function losefn(number){
-    if (grid.flagsPosition.indexOf(number) != -1){
-        return;}
-    grid.loses = true;
-    butn.classList.replace('newGame', 'losebtn')
-    explodemines(number);
-    grid.theme == grid.themes[0] ? (document.querySelector('.lose-container').style.display = 'block') : (document.querySelector('.lose').style.display = 'block')
-}
-
-function calc(position, ...args){
-    let numbercell = 0
-
-    // just idea
-/*  setArgs={ 
-
-    } */   
-    
-    
-    if (args.includes(1) && grid.numbersList[position+grid.columns-1] == "m"){
-        numbercell +=1
-    }
-    if (args.includes(2) && grid.numbersList[position+grid.columns] == "m"){
-        numbercell +=1
-    }
-    if (args.includes(3) && grid.numbersList[position+grid.columns+1] == "m"){
-        numbercell +=1
-    }
-    if (args.includes(4) && grid.numbersList[position-1] == "m"){
-        numbercell +=1
-    }
-    if (args.includes(6) && grid.numbersList[position+1] == "m"){
-        numbercell +=1
-    }
-    if (args.includes(7) && grid.numbersList[position-grid.columns-1] == "m"){
-        numbercell +=1
-    }
-    if (args.includes(8) && grid.numbersList[position-grid.columns] == "m"){
-        numbercell +=1
-    }
-    if (args.includes(9) && grid.numbersList[position-grid.columns+1] == "m"){
-        numbercell +=1
-    }
-    grid.gridComplete.push(numbercell)
-}
-
-function checkmines(position){
-    let number = position;
-    let flagsArround = 0;
-    let calc = [];
-
-    (number >grid.columns && number <grid.columns*(grid.rows-1)&& number%grid.columns != 0 && number%grid.columns != 1)?
-        calc = [1, 2, 3, 4, 6, 7, 8, 9]:
-    (number == 1)?
-        calc = [2, 3, 6]:
-    (number == grid.columns)?
-        calc = [1, 2, 4]:
-    (number == grid.columns*(grid.rows-1)+1)?
-        calc = [6, 8, 9]:
-    (number == grid.columns*grid.rows)?
-        calc = [4, 7, 8]:
-    (number<grid.columns)?
-        calc = [1, 2, 3, 4, 6]:
-    (number>grid.columns*grid.rows-grid.columns)?
-        calc = [4, 6, 7, 8, 9]:
-    (number%grid.columns==0)?
-        calc = [1, 2, 4, 7, 8]:
-    (number%grid.columns==1)?
-        calc = [2, 3, 6, 8, 9]:
-    null;
-
-
-    if (calc.includes(1) && grid.flagsPosition.includes(position+grid.columns-1)){
-        flagsArround +=1
-    }
-    if (calc.includes(2) && grid.flagsPosition.includes(position+grid.columns)){
-        flagsArround +=1
-    }
-    if (calc.includes(3) && grid.flagsPosition.includes(position+grid.columns+1)){
-        flagsArround +=1
-    }
-    if (calc.includes(4) && grid.flagsPosition.includes(position-1)){
-        flagsArround +=1
-    }
-    if (calc.includes(6) && grid.flagsPosition.includes(position+1)){
-        flagsArround +=1
-    }
-    if (calc.includes(7) && grid.flagsPosition.includes(position-grid.columns-1)){
-        flagsArround +=1
-    }
-    if (calc.includes(8) && grid.flagsPosition.includes(position-grid.columns)){
-        flagsArround +=1
-    }
-    if (calc.includes(9) && grid.flagsPosition.includes(position-grid.columns+1)){
-        flagsArround +=1
-    }
-    if(flagsArround  == grid.gridComplete[position]){
-        return explode(position) ;
-    }
-}
-
-async function explode(position){
-    //    
-    grid.inexplode = true;
-    //position
-    let positionRep = selectors.content.children[parseInt((position-1)/grid.columns)].children[(position-1)%grid.columns]
-    let indexFlag = grid.flagsPosition.indexOf(position);
-    //vars
-    let p = position;
-    let c = grid.columns;
-    let np = lClick;
-    //positions
-    let p1 = p+c-1;
-    let p2 = p+c;
-    let p3 = p+c+1;
-    let p4 = p-1;
-    let p6 = p+1;
-    let p7 = p-c-1;
-    let p8 = p-c;
-    let p9 = p-c+1;
-    let number = position;
-    let results;
-    if (grid.checkeds.includes(position)){
-
-    }
-    else{
-    grid.checkeds.push(position)
-    }
-    if(indexFlag != -1){
-        positionRep.classList.replace('flag','cell');
-        positionRep.innerHTML = '';
-        grid.flagsPosition.splice(indexFlag, 1)
-        grid.flagsQuantity += 1
-        selectors.mines.innerHTML = grid.flagsQuantity.toString()
-    }
-
-    if(number >grid.columns && number <grid.columns*(grid.rows-1)&& number%grid.columns != 0 && number%grid.columns != 1){
-        let promise = Promise.resolve(np(p1), np(p2), np(p3), np(p4), np(p6), np(p7), np(p8), np(p9))
-        results = await promise
-        grid.inexplode = false;
-        return ;
-    }
-    else{
-        if (number == 1){
-            let promise = Promise.resolve(np(p2), np(p3), np(p6));
-            results = await promise
-            return grid.inexplode = false;
-        }
-        if (number == grid.columns){
-            let promise = Promise.resolve(np(p1), np(p2), np(p4));
-            results = await promise
-            return grid.inexplode = false;
-        }
-        if (number == grid.columns*(grid.rows-1)+1){
-            let promise = Promise.resolve(np(p6), np(p8), np(p9));
-            results = await promise
-            return grid.inexplode = false;
-        }
-        if (number == grid.columns*grid.rows){
-            let promise = Promise.resolve(np(p4), np(p7), np(p8));
-            results = await promise
-            return grid.inexplode = false;
-        }
-        if (number<grid.columns){
-            let promise = Promise.resolve(np(p1), np(p2), np(p3), np(p4), np(p6));
-            results = await promise
-
-            return grid.inexplode = false;
-        }
-        if (number>grid.columns*grid.rows-grid.columns){
-            let promise = Promise.resolve(np(p4), np(p6), np(p7), np(p8), np(p9));
-            results = await promise
-
-            return grid.inexplode = false;
-        }
-        if (number%grid.columns==0){
-            let promise = Promise.resolve(np(p1), np(p2), np(p4), np(p7), np(p8));
-            results = await promise
-
-            return grid.inexplode = false;
-        }
-        if (number%grid.columns==1){
-            let promise = Promise.resolve(np(p2), np(p3), np(p6), np(p8), np(p9));
-            results = await promise
-
-            return grid.inexplode = false;
-        }
-    }
-}
 //restart
-function newGame(colsOptions = grid.columns, rowsOptions = grid.rows, minesOptions = grid.minesQuantity, themeOption = grid.theme){
+export function newGame(colsOptions = grid.columns, rowsOptions = grid.rows, minesOptions = grid.minesQuantity, themeOption = grid.theme){
     document.body.innerHTML = ''
     for (var i=0; i<myTimeout.length; i++) {
     clearTimeout(myTimeout[i]);
@@ -510,8 +79,7 @@ function newGame(colsOptions = grid.columns, rowsOptions = grid.rows, minesOptio
     grid.gridComplete = [null]
     grid.flagsPosition = []
     grid.theme = themeOption;
-    grid.headStyle = ''
-    gridCreation()
+    functionsLogicLayout.gridCreation()
     stopTimer();
     timer = 0;
 
@@ -537,16 +105,7 @@ function newGame(colsOptions = grid.columns, rowsOptions = grid.rows, minesOptio
     grid.inexplode = false;
     grid.invertClick = false;
 
-    //reset all
-/*     for (let i = 0; i < grid.rows; i++){
-        for (let j = 0; j < grid.columns; j++){
-            content.children[i].children[j].classList.replace('flagerror','cell');
-            content.children[i].children[j].classList.replace('flag','cell');
-            content.children[i].children[j].classList.replace('number','cell');
-            content.children[i].children[j].innerHTML = '';
-            content.children[i].children[j].classList.remove("n0", "n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "nm");
-        }
-    } */
+
 
     //listeners buttons and selectors
     newGameButtons = document.querySelectorAll('.newGame, .lose-retry-button, .congrats-retry-button')  //.addEventListener('click', function () {newGame()}, true)
@@ -555,13 +114,13 @@ function newGame(colsOptions = grid.columns, rowsOptions = grid.rows, minesOptio
     );
     configbtn = document.querySelector('.config-btn')
     configbtn.addEventListener('click', function ()  {config()}, true);
-    selectors.content.addEventListener('click', function (event) { check(event, 'primary') }, true);
-    selectors.content.addEventListener('contextmenu', function (event) { check(event, 'secondary') }, true);
+    selectors.content.addEventListener('click', function (event) { functionsGamePlay.check(event, 'primary') }, true);
+    selectors.content.addEventListener('contextmenu', function (event) { functionsGamePlay.check(event, 'secondary') }, true);
     fg = document.querySelector('.fg')
-    fg.addEventListener('click', function () {invert()}, true)
+    fg.addEventListener('click', function () {functionsGamePlay.invert()}, true)
 
     
-    if(grid.theme == grid.themes[0])  {
+    if(grid.theme == grid.themes[0].name)  {
         // console.log(),
     document.querySelector('.lose-container').style.display = 'none';
     document.querySelector('.lose-container').classList.remove('focussed');
@@ -703,9 +262,9 @@ function config(){
 
 
 function templategen(){
-    let head = document.getElementsByTagName('head');
-    grid.headStyle = document.createElement('style');
-    head[0].appendChild(grid.headStyle);
+
+    selectors.headStyle = document.createElement('style');
+    selectors.headHTML[0].appendChild(selectors.headStyle);
 
     for(let i=1; i<= 15;i++){
         let negative = negativefn();
@@ -797,7 +356,7 @@ function templategen(){
         }
       }
     `
-    grid.headStyle.insertAdjacentHTML('beforeend', cellAnim);
+    selectors.headStyle.insertAdjacentHTML('beforeend', cellAnim);
     }
     for(let i=1; i<= 20;i++){
         let negative = negativefn();
@@ -840,16 +399,16 @@ function templategen(){
         83%{        
             -webkit-transform: scale(0.4) rotate(${(deg*randomFloatInterval(0.4,0.7,1)).toFixed(2)}deg);
             transform: scale(0.4) rotate(${(deg*randomFloatInterval(0.4,0.7,1)).toFixed(2)}deg);
-            opacity: 1;
             left: ${(negativehor*randomFloatInterval(0.3,0.7,1)).toFixed(2)}%;
+            opacity: 1;
+
         }    
-        99%{
+        100%{
             top:${down}%;
             left: ${horizontal2}%;
             -webkit-transform: scale(0.1) rotate(${(deg*randomFloatInterval(0.1,0.4,1)).toFixed(2)*-1}deg);
             transform: scale(0.1) rotate(${(deg*randomFloatInterval(0.1,0.4,1)).toFixed(2)*-1}deg);
             opacity: 0;
-
         }
     }
     @keyframes bookmark-anim${i} {
@@ -893,32 +452,35 @@ function templategen(){
         }
     }
 `
-grid.headStyle.insertAdjacentHTML('beforeend', bookmarkAnim);
+selectors.headStyle.insertAdjacentHTML('beforeend', bookmarkAnim);
 
     };
 
-    let divfs = document.createElement('div');
-    let header = document.createElement('header');
-    let section = document.createElement('section');
-    if (grid.theme == grid.themes[0]){divfs.className ='full-screen google'}
-    else if (grid.theme == grid.themes[1]){divfs.className ='full-screen windows'}
-    else if (grid.theme == grid.themes[2]){divfs.className ='full-screen pacman'};
-    document.body.appendChild(divfs);
-    let container = document.createElement('div');
-    container.className = 'container';
-    divfs.appendChild(container);
-    header.className = 'header';
-    container.appendChild(header);
+    selectors.fullScreen = document.createElement('div');
+    selectors.header = document.createElement('header');
+
+    if (grid.theme == grid.themes[0].name){selectors.fullScreen.className ='full-screen google'}
+    else if (grid.theme == grid.themes[1].name){selectors.fullScreen.className ='full-screen windows'}
+    else if (grid.theme == grid.themes[2].name){selectors.fullScreen.className ='full-screen pacman'};
+    document.body.appendChild(selectors.fullScreen);
+    selectors.section = document.createElement('section');
+    selectors.container = document.createElement('div');
+
+    selectors.container.className = 'container';
+    selectors.fullScreen.appendChild(selectors.container);
+    selectors.header.className = 'header';
+    selectors.container.appendChild(selectors.header);
+
     let info = document.createElement('div');
     info.className = 'info';
-    header.appendChild(info);
+    selectors.header.appendChild(info);
     selectors.timer = document.createElement('div');
     selectors.timer.className = 'timer';
     selectors.timer.innerText = '999'
     info.appendChild(selectors.timer);
-    let btnNewGame = document.createElement('div');
-    btnNewGame.className = 'btn newGame';
-    info.appendChild(btnNewGame);
+    selectors.btnNewGame = document.createElement('div');
+    selectors.btnNewGame.className = 'btn newGame';
+    info.appendChild(selectors.btnNewGame);
     let btnConfig = document.createElement('div');
     btnConfig.className = 'config-btn';
     info.appendChild(btnConfig);
@@ -930,14 +492,14 @@ grid.headStyle.insertAdjacentHTML('beforeend', bookmarkAnim);
     selectors.mines.className = 'mines';
     info.appendChild(selectors.mines);
 
-    section.className = 'section';
-    container.appendChild(section);
+    selectors.section.className = 'section';
+    selectors.container.appendChild(selectors.section);
 
 
     
     selectors.content = document.createElement('div');
     selectors.content.className = 'contenedor';
-    section.appendChild(selectors.content);
+    selectors.section.appendChild(selectors.content);
     let row;
     let cellcont; 
 
@@ -957,7 +519,7 @@ grid.headStyle.insertAdjacentHTML('beforeend', bookmarkAnim);
     let congrats = document.createElement('div');
     let lose = document.createElement('div');
 
-    if (grid.theme == grid.themes[0]){
+    if (grid.theme == grid.themes[0].name){
         lose.addEventListener('click', function(){
             if(lose.classList[1] != 'focussed' | lose.classList[0] != 'focussed')
             {lose.classList.add('focussed')};
@@ -986,21 +548,21 @@ grid.headStyle.insertAdjacentHTML('beforeend', bookmarkAnim);
         </div>
         `
         )
-        container.appendChild(lose)
-        container.appendChild(congrats);    
+        selectors.container.appendChild(lose)
+        selectors.container.appendChild(congrats);    
      }
 
     else {
     congrats.className = 'lose';
     lose.innerText = 'Lamentablemente has perdido';
-    container.appendChild(lose)
+    selectors.container.appendChild(lose)
     congrats.className = 'congrats';
     congrats.innerText = 'Felicitaciones has ganado!';
-    container.appendChild(congrats)};
+    selectors.container.appendChild(congrats)};
 
     let menu = document.createElement('div');
     menu.className = 'menu-container';
-    container.appendChild(menu);
+    selectors.container.appendChild(menu);
     menu.insertAdjacentHTML('beforeend', `
     <div class="menu">
     <p>level</p>
@@ -1064,14 +626,7 @@ function randomFloatInterval(min, max, decimalPlaces) {
     return (Math.random() * (max - min) + min).toFixed(decimalPlaces) * 1;
 }
 
-function animationCell(positionRep){
-    let anim = document.createElement('div');
-    anim.className = 'cell-active';
-    positionRep.appendChild(anim);
-    let animNum = randomIntFromInterval(1,15)
-    anim.style.webkitAnimation = `cellAnim${animNum} ${randomFloatInterval(1,1.8,2)}s ease-in forwards`;
-    anim.style.animation = `cellAnim${animNum} ${randomFloatInterval(0.8,1.2,2)}s ease-in forwards`;
-}
+
 
 function explodemines(number){
 
@@ -1118,10 +673,6 @@ for(let i=1; i<= 8;i++){
     myTimeout.push(setTimeout(animationExp, randomIntFromInterval(500,(grid.minesQuantity*500)), explode));
 
     }
-
-
-    
-
 }
 
 
@@ -1143,7 +694,7 @@ function animationExp(explode){
         `<div class="nm-block" style="background-color:${bgCols[bg1][0]}"></div>
         <div class="nm-mine" style="background-color:${bgCols[bg1][1]}"></div>
         `)
-        for(let i=1; i<= 8;i++){
+        for(let i=1; i<= 8;i++){explode
         bg2 = randomIntFromInterval(0,1);
         
         positionRep.insertAdjacentHTML('beforeend',     

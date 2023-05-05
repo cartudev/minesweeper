@@ -55,9 +55,12 @@ The following contributors have contributed to this project and their contact in
 - [@cartudev](https://github.com/cartudev/)
 
 ## Version History
+* 0.2.2
+    * Refactoring js style.
+    * Themes working with some bugs.
 * 0.2.1
     * Refactored css of google style into a scss file.
-    * added preliminary css files from pacman and windows style.
+    * Added preliminary css files from pacman and windows style.
 * 0.2.0
     * Added all the config options and apply button is working.
 * 0.1.9

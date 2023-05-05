@@ -1,4 +1,4 @@
 import '../styles/style.scss'
-import {gridCreation} from './modified'
-
-gridCreation()
+import {newGame} from './modified'
+import {functionsLogicLayout} from './functions'
+newGame()

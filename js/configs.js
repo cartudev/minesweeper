@@ -1,3 +1,5 @@
+import { generalUse } from "./functions";
+
 export let grid = {
     columns : 16,
     rows : 16,
@@ -9,7 +11,28 @@ export let grid = {
     checkeds : [],
     gridComplete : [null],
     flagsPosition : [],
-    themes:['google', 'windows', 'pacman'],
+    themes:[
+        {name: 'google',
+        functions: {
+            animations: {
+                animationCell: function(positionRep){
+                    let anim = document.createElement('div');
+                    anim.className = 'cell-active';
+                    positionRep.appendChild(anim);
+                    let animNum = generalUse.randomIntFromInterval(1,15)
+                    anim.style.webkitAnimation = `cellAnim${animNum} ${generalUse.randomFloatInterval(1,1.8,2)}s ease-in forwards`;
+                    anim.style.animation = `cellAnim${animNum} ${generalUse.randomFloatInterval(0.8,1.2,2)}s ease-in forwards`;
+                   }
+                }
+            }
+        },
+        {name: 'windows'},
+        {name: 'pacman'},
+        {common: {
+
+            }
+        }
+    ],
     theme: 'google',
     headStyle: undefined,
     loses: false,
@@ -20,10 +43,16 @@ export let grid = {
 
 
 export let selectors = {
+    headHTML: document.getElementsByTagName('head'),
+    headStyle: undefined,
     content: undefined,
+    header: undefined,
     timer: undefined,
     mines: undefined,
-
+    fullScreen: undefined,
+    section: undefined,
+    container: undefined,
+    btnNewGame: undefined,
     listeners :
     {
 
