@@ -63,7 +63,7 @@ function cronometro(){
 
 
 //restart
-export function newGame(colsOptions = grid.columns, rowsOptions = grid.rows, minesOptions = grid.minesQuantity, themeOption = grid.theme){
+export function newGame(colsOptions = grid.columns, rowsOptions = grid.rows, minesOptions = grid.minesQuantity, themeOption = grid.theme.id){
     document.body.innerHTML = ''
     for (var i=0; i<myTimeout.length; i++) {
     clearTimeout(myTimeout[i]);
@@ -78,7 +78,8 @@ export function newGame(colsOptions = grid.columns, rowsOptions = grid.rows, min
     grid.checkeds = [];
     grid.gridComplete = [null]
     grid.flagsPosition = []
-    grid.theme = themeOption;
+    grid.theme.id = parseInt(themeOption);
+    grid.theme.name = grid.themes[grid.theme.id].name
     functionsLogicLayout.gridCreation()
     stopTimer();
     timer = 0;
@@ -119,19 +120,7 @@ export function newGame(colsOptions = grid.columns, rowsOptions = grid.rows, min
     fg = document.querySelector('.fg')
     fg.addEventListener('click', function () {functionsGamePlay.invert()}, true)
 
-    
-    if(grid.theme == grid.themes[0].name)  {
-        // console.log(),
-    document.querySelector('.lose-container').style.display = 'none';
-    document.querySelector('.lose-container').classList.remove('focussed');
-    document.querySelector('.congrats-container').style.display = 'none';
-    // document.querySelector('.win-container').classList.remove('focussed')
 
-}
-
-    else {
-        document.querySelector('.congrats').style.display = 'none'
-        document.querySelector('.lose').style.display = 'none'}
 }
 
 function config(){
@@ -265,203 +254,18 @@ function templategen(){
 
     selectors.headStyle = document.createElement('style');
     selectors.headHTML[0].appendChild(selectors.headStyle);
+    console.log(grid.themes[grid.theme.id].functions.animations.bookmarkHeadAnimation)
+    grid.themes[grid.theme.id].functions.animations.bookmarkHeadAnimation
+    grid.themes[grid.theme.id].functions.animations.cellAnimation
 
-    for(let i=1; i<= 15;i++){
-        let negative = negativefn();
-        let negative2 = negativefn();
-        let left = `${randomIntFromInterval(100,400)}`;
-        let halfLeft = Math.ceil(left/2);
-        let tenLeft= Math.ceil(left*.1);
-        let topPos = randomIntFromInterval(0,400);
-        let fall  = topPos*-1 + randomIntFromInterval(0,200);
-        let almostTop = Math.ceil(topPos * (randomIntFromInterval(92,98)*0.01));
-        let almostTop2 = Math.ceil(topPos * (randomIntFromInterval(92,98)*0.01));
-        let rotate = randomIntFromInterval(90,400);
-        let halfRotate = Math.ceil(rotate/2);
-        let scale = randomIntFromInterval(1,3);
-    
-    let cellAnim = `
-    @-webkit-keyframes cellAnim${i} {
-        0% {
-            webkit-transform: rotate(0) scale(1);
-            transform: rotate(0) scale(1);
-            left: 0%;
-            top: 0%;
-            visibility:visible;
-            opacity: 1;
-            }
-        35%{
-            top: -${almostTop}%;
-            left: ${negative}${(halfLeft-tenLeft)}%;
-        }
-        50%{
-            transform: rotate(${halfRotate}) scale(1.${randomIntFromInterval(2,8)});
-            top: -${topPos}%;
-                left: ${negative}${halfLeft}%;
-        }
-    
-        65%{
-            top: -${almostTop2}%;
-            left: ${negative}${(halfLeft+tenLeft)}%;
-        }
-        90%{
-            opacity: 0.${randomIntFromInterval(7,9)};
-        }
-        100% {
-            webkit-transform: rotate(${rotate}deg) scale(0.${scale});
-            opacity: 0;
-            transform: rotate(${negative2}${rotate}deg) scale(0.${scale});
-            left: ${negative}${(left+tenLeft)}%;
-            top:${fall}%;
-            filter: blur(${randomIntFromInterval(1,3)})
-          visibility: hidden;
-        }
-      }
-      @keyframes cellAnim${i} {
-        0% {
-            transform: rotate(0);
-            scale: 1;
-            left: 0%;
-            top: 0%;
-            visibility:visible;
-            opacity: 1;
-            }
-    
-        35%{
-            top: -${almostTop}%;
-            left: ${negative}${(halfLeft-tenLeft)}%;
-        }
 
-        50%{
-            scale: 1.${randomIntFromInterval(1,3)};
-            top: -${topPos}%;
-            left: ${negative}${halfLeft}%;
-        }
-        65%{
-            top: -${almostTop2}%;
-            left: ${negative}${(halfLeft+tenLeft)}%;
-        }
-        90%{
-            opacity: 0.${randomIntFromInterval(7,9)};
-        }
-
-        100% {
-            transform: rotate(${negative2}${rotate}deg);
-            scale: 0.${scale};
-            left: ${negative}${left}%;
-            top:${fall}%;
-            opacity: 0;
-            filter: blur(${randomIntFromInterval(1,3)})
-          visibility: hidden;
-        }
-      }
-    `
-    selectors.headStyle.insertAdjacentHTML('beforeend', cellAnim);
-    }
-    for(let i=1; i<= 20;i++){
-        let negative = negativefn();
-        let negative2 = negativefn();
-        let originHor = randomIntFromInterval(0,300);
-        let top1 = randomIntFromInterval(30, 250);
-        let top2 = randomIntFromInterval(30, 250);
-        let horizontalStart = randomIntFromInterval(0,60);
-        let horizontal = (negative == '') ?randomIntFromInterval(15,300):randomIntFromInterval(15,300)*-1;
-        let negativehor = horizontal*-1 ;
-        let horizontal2 = randomIntFromInterval(0,80);
-        let deg = (negative2 == '') ?randomIntFromInterval(20, 62):randomIntFromInterval(20, 62)*-1;
-        let up = randomIntFromInterval(1,150);
-        let down = randomIntFromInterval(30,220);
-    let bookmarkAnim = `
-    @-webkit-keyframes bookmark-anim${i} {
-        0% {
-            visibility:visible;
-            -webkit-transform-origin: ${originHor.toFixed(2)}% -${top1*2.5}%;
-            transform-origin: ${originHor}% -${top1*2.5}%;
-            left: ${horizontalStart}%;
-            top: ${top1}%;
-            opacity: 1;
-            -webkit-transform: scale(0.3);
-            transform: scale(0.3);
-            transition: linear;
-        }
-        10%{
-            top:-${up}%;
-            left: ${horizontal}%;
-            -webkit-transform: scale(0.7)rotate(${deg}deg)
-            transform: scale(0.7)rotate(${deg}deg)
-        }
-        50%{
-            -webkit-transform: rotate(${(deg*randomFloatInterval(0.7,1.0,1)).toFixed(2)*-1}deg);
-            transform: rotate(${(deg*randomFloatInterval(0.7,1.0,1)).toFixed(2)*-1}deg);
-            left:${negativehor}%;
-            top: ${(up-down*randomFloatInterval(0.35,0.65,2)).toFixed(2)}%;
-        }
-        83%{        
-            -webkit-transform: scale(0.4) rotate(${(deg*randomFloatInterval(0.4,0.7,1)).toFixed(2)}deg);
-            transform: scale(0.4) rotate(${(deg*randomFloatInterval(0.4,0.7,1)).toFixed(2)}deg);
-            left: ${(negativehor*randomFloatInterval(0.3,0.7,1)).toFixed(2)}%;
-            opacity: 1;
-
-        }    
-        100%{
-            top:${down}%;
-            left: ${horizontal2}%;
-            -webkit-transform: scale(0.1) rotate(${(deg*randomFloatInterval(0.1,0.4,1)).toFixed(2)*-1}deg);
-            transform: scale(0.1) rotate(${(deg*randomFloatInterval(0.1,0.4,1)).toFixed(2)*-1}deg);
-            opacity: 0;
-        }
-    }
-    @keyframes bookmark-anim${i} {
-        0% {
-            visibility:visible;
-            -webkit-transform-origin: ${originHor.toFixed(2)}% -${top1*2.5}%;
-            transform-origin: ${originHor}% -${top1*2.5}%;
-            left: ${horizontalStart}%;
-            top: ${top1}%;
-            opacity: 1;
-            -webkit-transform: scale(0.3);
-            transform: scale(0.3);
-            transition: linear;
-        }
-        10%{
-            top:-${up}%;
-            left: ${horizontal}%;
-            -webkit-transform: scale(0.7)rotate(${deg}deg)
-            transform: scale(0.7)rotate(${deg}deg)
-        }
-        50%{
-            -webkit-transform: rotate(${(deg*randomFloatInterval(0.7,1.0,1)).toFixed(2)*-1}deg);
-            transform: rotate(${(deg*randomFloatInterval(0.7,1.0,1)).toFixed(2)*-1}deg);
-            left:${negativehor}%;
-            top: ${(up-down*randomFloatInterval(0.35,0.65,2)).toFixed(2)}%;
-        }
-        83%{        
-            -webkit-transform: scale(0.4) rotate(${(deg*randomFloatInterval(0.4,0.7,1)).toFixed(2)}deg);
-            transform: scale(0.4) rotate(${(deg*randomFloatInterval(0.4,0.7,1)).toFixed(2)}deg);
-            left: ${(negativehor*randomFloatInterval(0.3,0.7,1)).toFixed(2)}%;
-            opacity: 1;
-
-        }    
-        100%{
-            top:${down}%;
-            left: ${horizontal2}%;
-            -webkit-transform: scale(0.1) rotate(${(deg*randomFloatInterval(0.1,0.4,1)).toFixed(2)*-1}deg);
-            transform: scale(0.1) rotate(${(deg*randomFloatInterval(0.1,0.4,1)).toFixed(2)*-1}deg);
-            opacity: 0;
-
-        }
-    }
-`
-selectors.headStyle.insertAdjacentHTML('beforeend', bookmarkAnim);
-
-    };
 
     selectors.fullScreen = document.createElement('div');
     selectors.header = document.createElement('header');
 
-    if (grid.theme == grid.themes[0].name){selectors.fullScreen.className ='full-screen google'}
-    else if (grid.theme == grid.themes[1].name){selectors.fullScreen.className ='full-screen windows'}
-    else if (grid.theme == grid.themes[2].name){selectors.fullScreen.className ='full-screen pacman'};
+    if (grid.theme.name == grid.themes[0].name){selectors.fullScreen.className ='full-screen google'}
+    else if (grid.theme.name == grid.themes[1].name){selectors.fullScreen.className ='full-screen windows'}
+    else if (grid.theme.name == grid.themes[2].name){selectors.fullScreen.className ='full-screen pacman'};
     document.body.appendChild(selectors.fullScreen);
     selectors.section = document.createElement('section');
     selectors.container = document.createElement('div');
@@ -484,9 +288,9 @@ selectors.headStyle.insertAdjacentHTML('beforeend', bookmarkAnim);
     let btnConfig = document.createElement('div');
     btnConfig.className = 'config-btn';
     info.appendChild(btnConfig);
-    let btnFg = document.createElement('div');
-    btnFg.className = 'btn fg';
-    info.appendChild(btnFg);
+    selectors.btnFg = document.createElement('div');
+    selectors.btnFg.className = 'btn fg';
+    info.appendChild(selectors.btnFg);
     
     selectors.mines = document.createElement('div');
     selectors.mines.className = 'mines';
@@ -515,115 +319,11 @@ selectors.headStyle.insertAdjacentHTML('beforeend', bookmarkAnim);
         }
     }
 
+    console.log(grid.theme.id)
+    grid.themes[grid.theme.id].functions.congratsLose
 
-    let congrats = document.createElement('div');
-    let lose = document.createElement('div');
+    grid.themes[3].common.menu()
 
-    if (grid.theme == grid.themes[0].name){
-        lose.addEventListener('click', function(){
-            if(lose.classList[1] != 'focussed' | lose.classList[0] != 'focussed')
-            {lose.classList.add('focussed')};
-        });
-
-
-        congrats.className = 'congrats-container focussed';
-        lose.className = 'lose-container';
-    
-        lose.insertAdjacentHTML('beforeend', `
-        <div class="lose">
-        <div class="lose-content"></div>
-        <div class="lose-bg"></div>
-        <div class="lose-retry-button">
-        <div class="lose-retry-icon"></div><p>Reintentar</p>
-        </div>
-        </div>
-        `)
-        congrats.insertAdjacentHTML('beforeend', `
-        <div class="congrats">
-        <div class="congrats-content"></div>
-        <div class="congrats-bg"></div>
-        <div class="congrats-retry-button">
-        <div class="congrats-retry-icon"></div><p>Volver a jugar</p>
-        </div>
-        </div>
-        `
-        )
-        selectors.container.appendChild(lose)
-        selectors.container.appendChild(congrats);    
-     }
-
-    else {
-    congrats.className = 'lose';
-    lose.innerText = 'Lamentablemente has perdido';
-    selectors.container.appendChild(lose)
-    congrats.className = 'congrats';
-    congrats.innerText = 'Felicitaciones has ganado!';
-    selectors.container.appendChild(congrats)};
-
-    let menu = document.createElement('div');
-    menu.className = 'menu-container';
-    selectors.container.appendChild(menu);
-    menu.insertAdjacentHTML('beforeend', `
-    <div class="menu">
-    <p>level</p>
-    <div class="level">
-        <input class="radio-btn" type="radio" id="easy" name="level" value="easy"/>
-        <label for="easy" class="accordion-tab">easy</label>
-        <input class="radio-btn" checked="checked" type="radio" id="medium" name="level" value="normal"/>
-        <label for="medium" class="accordion-tab">medium</label>
-        <input class="radio-btn" type="radio" id="hard" name="level" value="hard"/>
-        <label for="hard" class="accordion-tab">hard</label>
-        <input class="radio-btn" type="radio" id="custom" name="level" value="custom"/>
-        <label for="custom" class="accordion-tab">custom</label>
-    </div>
-    <div class="inputs">
-    <form>
-    <p>Columns</p>
-
-    <div id="cols">
-    <input class="cols-quantity" type="range" name="colsRange" min="8" max="30" value="16" oninput="this.form.colsInput.value=this.value" />
-    <input class="cols-input" type="number" name="colsInput" min="8" max="30" value="16" oninput="this.form.colsRange.value=this.value" />
-    </div>
-    <p>Rows</p>  
-    <div id="rows">
-    <input class="rows-quantity" type="range" name="rowsRange" min="8" max="30" value="16" oninput="this.form.rowsInput.value=this.value" />
-    <input class="rows-input" type="number" name="rowsInput" min="8" max="30" value="16" oninput="this.form.rowsRange.value=this.value" />
-    </div>
-    <p>Mines</p>
-    <div id="mines">
-    <input class="mines-quantity" type="range" name="minesRange" min="1" max="256" value="40" oninput="this.form.minesInput.value=this.value" />
-    <input class="mines-input" type="number" name="minesInput" min="1" max="256" value="40" oninput="this.form.minesRange.value=this.value" />
-    </div>
-    </form>
-    </div>
-
-    <div data-dropup-auto="false" style="display: inline-block;" class="dropdown">
-    <p>theme</p>
-    <select id="theme">    
-    <option value='google'>Google Theme</option>
-    <option value='windows'>Classic Windows (w.i.p)</option>  
-    <option value='pacman'>Pacman style (w.i.p)</option>
-    </select>
-    </div>
-    <div class="buttons">
-        <button class="apply-btn">Apply</button>
-        <button class="cancel-btn">Cancel</button>
-    </div>
-    </div>
-    `
-    )}
-
-function negativefn(){
-    if(Math.random() < 0.5){
-        return '-'
-    } 
-    return '';
-}
-function randomIntFromInterval(min, max) { // min and max included 
-    return Math.floor(Math.random() * (max - min + 1) + min)}
-
-function randomFloatInterval(min, max, decimalPlaces) {
-    return (Math.random() * (max - min) + min).toFixed(decimalPlaces) * 1;
 }
 
 
@@ -631,9 +331,9 @@ function randomFloatInterval(min, max, decimalPlaces) {
 function explodemines(number){
 
     let cont = selectors.content;
-    let bg1 = randomIntFromInterval(0,7);
-    let bg2 = randomIntFromInterval(0,1);
-    let bg3 = randomIntFromInterval(0,1);
+    let bg1 = generalUse.randomIntFromInterval(0,7);
+    let bg2 = generalUse.randomIntFromInterval(0,1);
+    let bg3 = generalUse.randomIntFromInterval(0,1);
 
 
     let positionRep = cont.children[parseInt((number-1)/grid.columns)].children[(number-1)%grid.columns];
@@ -648,12 +348,12 @@ function explodemines(number){
     <div class="nm-mine" style="background-color:${bgCols[bg1][1]}"></div>
     `)
 for(let i=1; i<= 8;i++){
-    bg2 = randomIntFromInterval(0,1);
+    bg2 = generalUse.randomIntFromInterval(0,1);
     
     positionRep.insertAdjacentHTML('beforeend',     
     `<div class="nm-confetti" style=" background-color: ${Colors[bg1][bg2]};
-    animation: bookmark-anim${randomIntFromInterval(1,20)} ${randomFloatInterval(4.5,6.5,1)}s forwards ease-in;
-    scale : ${randomFloatInterval(0.5,1.5,1)}"></div>
+    animation: bookmark-anim${generalUse.randomIntFromInterval(1,20)} ${generalUse.randomFloatInterval(4.5,6.5,1)}s forwards ease-in;
+    scale : ${generalUse.randomFloatInterval(0.5,1.5,1)}"></div>
     `);
 
 }    let deletenum = grid.minesPositions.indexOf(number);
@@ -670,7 +370,7 @@ for(let i=1; i<= 8;i++){
 
     }
     for (let explode of grid.minesPositions){
-    myTimeout.push(setTimeout(animationExp, randomIntFromInterval(500,(grid.minesQuantity*500)), explode));
+    myTimeout.push(setTimeout(animationExp, generalUse.randomIntFromInterval(500,(grid.minesQuantity*500)), explode));
 
     }
 }
@@ -679,9 +379,9 @@ for(let i=1; i<= 8;i++){
 function animationExp(explode){
 
     let cont = selectors.content;
-    let bg1 = randomIntFromInterval(0,7);
-    let bg2 = randomIntFromInterval(0,1);
-    let bg3 = randomIntFromInterval(0,1);
+    let bg1 = generalUse.randomIntFromInterval(0,7);
+    let bg2 = generalUse.randomIntFromInterval(0,1);
+    let bg3 = generalUse.randomIntFromInterval(0,1);
     if( !grid.flagsPosition.includes(explode)){
 
         let positionRep = cont.children[parseInt((explode-1)/grid.columns)].children[(explode-1)%grid.columns];
@@ -695,12 +395,12 @@ function animationExp(explode){
         <div class="nm-mine" style="background-color:${bgCols[bg1][1]}"></div>
         `)
         for(let i=1; i<= 8;i++){explode
-        bg2 = randomIntFromInterval(0,1);
+        bg2 = generalUse.randomIntFromInterval(0,1);
         
         positionRep.insertAdjacentHTML('beforeend',     
         `<div class="nm-confetti" style=" background-color: ${Colors[bg1][bg2]};
-        animation: bookmark-anim${randomIntFromInterval(1,20)} ${randomFloatInterval(4.5,6.5,1)}s forwards ease-in-out;
-        scale : ${randomFloatInterval(0.5,1.5,1)}"></div>
+        animation: bookmark-anim${generalUse.randomIntFromInterval(1,20)} ${generalUse.randomFloatInterval(4.5,6.5,1)}s forwards ease-in-out;
+        scale : ${generalUse.randomFloatInterval(0.5,1.5,1)}"></div>
         `);
     }
 

@@ -96,7 +96,7 @@ export let functionsLogicLayout = {
     },
     winfn: function(){
         selectors.btnNewGame.classList.replace('newGame', 'winbtn');
-        grid.theme == grid.themes[0].name ? (document.querySelector('.congrats-container').style.display = 'block') : (document.querySelector('.congrats').style.display = 'block')
+        grid.theme.name == grid.themes[0].name ? (document.querySelector('.congrats-container').style.display = 'block') : (document.querySelector('.congrats').style.display = 'block')
         grid.win = true;
     },
     losefn: function(number){
@@ -105,7 +105,7 @@ export let functionsLogicLayout = {
         grid.loses = true;
         selectors.btnNewGame.classList.replace('newGame', 'losebtn')
         // explodemines(number);
-        grid.theme == grid.themes[0].name ? (document.querySelector('.lose-container').style.display = 'block') : (document.querySelector('.lose').style.display = 'block')
+        grid.theme.name == grid.themes[0].name ? (document.querySelector('.lose-container').style.display = 'block') : (document.querySelector('.lose').style.display = 'block')
     }
 }
 
@@ -140,7 +140,8 @@ export let functionsGamePlay = {
             grid.flagsPosition.splice(myIndex, 1),
             grid.flagsQuantity += 1
             selectors.mines.innerHTML = grid.flagsQuantity.toString()
-            return this.lClick(position)
+            functionsGamePlay.lClick(position);
+            return ;
         }
         if (grid.flagsPosition.indexOf(position) != -1){
             return ;
@@ -150,7 +151,7 @@ export let functionsGamePlay = {
             positionRep.classList.replace('cell','number');
             if(!grid.checkeds.includes(position)){
             positionRep.classList.add(`n${grid.gridComplete[position]}`);
-            if(grid.theme == grid.themes[0].name){
+            if(grid.theme.name == grid.themes[0].name){
                 grid.themes[0].functions.animations.animationCell(positionRep)
             }
         }
@@ -178,7 +179,7 @@ export let functionsGamePlay = {
         
         myIndex == -1 ? (
             positionRep.classList.replace('cell','flag'),
-            grid.theme == grid.themes[0].name? (
+            grid.theme.name == grid.themes[0].name? (
             positionRep.innerHTML = '',
             positionRep.insertAdjacentHTML('beforeend',
             `<div class="f-animation" </div>`
@@ -187,7 +188,7 @@ export let functionsGamePlay = {
             grid.flagsQuantity -= 1
         ) : (
             positionRep.classList.replace('flag','cell'),
-            grid.theme == grid.themes[0].name? (
+            grid.theme.name == grid.themes[0].name? (
                 positionRep.innerHTML = '',
                 positionRep.insertAdjacentHTML('beforeend',     
                 `<div class="f-animation" style="animation: cellAnim${generalUse.randomIntFromInterval(1,15)} ${generalUse.randomFloatInterval(1,1.8,2)}s ease-in forwards; 
@@ -250,16 +251,17 @@ export let functionsGamePlay = {
             flagsArround +=1
         }
         if(flagsArround  == grid.gridComplete[position]){
-            return asyncFunctions.explode(position) ;
+            asyncFunctions.explode(position) ;
+            return;
         }
     },
 
     invert: function(){
-        if(fg.classList[1]== 'fg'){
-            fg.classList.replace('fg','mn')
+        if(selectors.btnFg.classList[1]== 'fg'){
+            selectors.btnFg.classList.replace('fg','mn')
             grid.invertClick = true;
         }
-        else{fg.classList.replace('mn','fg')
+        else{selectors.btnFg.classList.replace('mn','fg')
             grid.invertClick = false;
         }    
     },
@@ -273,16 +275,18 @@ export let functionsGamePlay = {
     
         if(grid.checkeds.includes(position)){
             event.preventDefault();
-            return this.lClick(position);
+            this.lClick(position);
+            return;
         }
         if (action == 'primary' && grid.invertClick == false || action == 'secondary' && grid.invertClick == true){
             event.preventDefault();
-            return this.lClick(position);
+            this.lClick(position);
+            return;
         }
     
         if (action == 'secondary' && grid.invertClick == false || action == 'primary' && grid.invertClick == true){
             event.preventDefault()
-            flags(position)
+            this.flags(position)
             return ;
         }
         }
@@ -397,6 +401,11 @@ export let generalUse = {
     randomIntFromInterval: function(min, max) { // min and max included 
         return Math.floor(Math.random() * (max - min + 1) + min)},
     randomFloatInterval: function (min, max, decimalPlaces) {
-        return (Math.random() * (max - min) + min).toFixed(decimalPlaces) * 1;
-}
+        return (Math.random() * (max - min) + min).toFixed(decimalPlaces) * 1},
+    negativefn :function(){
+        if(Math.random() < 0.5){
+            return '-'
+        } 
+            return '';
+    }
 }
