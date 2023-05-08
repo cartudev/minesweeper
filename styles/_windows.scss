@@ -189,7 +189,7 @@
   .lose{
       opacity: 0.75;
       position:absolute;
-      bottom:10vh;
+      top:calc(50% - 150px);
       left:calc(50% - 150px);
       display:none;
       font-size: 2.5vh;

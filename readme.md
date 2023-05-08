@@ -55,17 +55,18 @@ The following contributors have contributed to this project and their contact in
 - [@cartudev](https://github.com/cartudev/)
 
 ## Version History
+* 0.3.0
+    * All the js code has been moduled.
 * 0.2.2
-    * Refactoring js style.
+    * Refactoring js style for a better readability.
     * Themes working with some bugs.
 * 0.2.1
-    * Refactored css of google style into a scss file.
+    * Refactored CSS of Google style into a scss file.
     * Added preliminary css files from pacman and windows style.
 * 0.2.0
-    * Added all the config options and apply button is working.
+    * Added all the config options with sass code and apply button is working.
 * 0.1.9
     * Fixed bug in explode function using async function.
-    * Added config menu with sass code.
 * 0.1.8
     * Added config button.
     * Added flags selection icon.

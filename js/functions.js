@@ -1,5 +1,7 @@
 import { grid, selectors } from './configs';
 
+import { newGame } from './modified';
+
 export let functionsLogicLayout = {
     gridCreation: function() {
         for (let i = 1; i <= grid.cells; i++) {
@@ -17,7 +19,6 @@ export let functionsLogicLayout = {
         grid.numbersList.splice(0, 1, null)
         this.gridCompleteCreation()
     },
-    
     gridCompleteCreation: function(){
         for(let i = 1; i<=grid.cells;i++){
            this.numbersPosition(i) 
@@ -103,9 +104,7 @@ export let functionsLogicLayout = {
         if (grid.flagsPosition.indexOf(number) != -1){
             return;}
         grid.loses = true;
-        selectors.btnNewGame.classList.replace('newGame', 'losebtn')
-        // explodemines(number);
-        grid.theme.name == grid.themes[0].name ? (document.querySelector('.lose-container').style.display = 'block') : (document.querySelector('.lose').style.display = 'block')
+        grid.themes[grid.theme.id].functions.minesLose(number);
     }
 }
 
@@ -130,7 +129,7 @@ export let functionsGamePlay = {
     
             positionRep.classList.replace('cell','number');   
     
-            asyncFunctions.explode(position)
+            functionsGamePlay.explode(position)
     
         }
         if (grid.flagsPosition.indexOf(position) != -1 && grid.inexplode){
@@ -251,7 +250,7 @@ export let functionsGamePlay = {
             flagsArround +=1
         }
         if(flagsArround  == grid.gridComplete[position]){
-            asyncFunctions.explode(position) ;
+            functionsGamePlay.explode(position) ;
             return;
         }
     },
@@ -304,10 +303,7 @@ export let functionsGamePlay = {
         }
     
         else{return ;}
-    }
-}
-
-let asyncFunctions = {
+    },
     explode: async function(position){
         //    
         grid.inexplode = true;
@@ -397,6 +393,129 @@ let asyncFunctions = {
     }
 }
 
+export let functionsConfig = {
+    levelselected: function(){
+        let minesInput = document.getElementById("mines").children
+        let rowsInput = document.getElementById("rows").children
+        let colsInput = document.getElementById("cols").children
+
+        let level = document.querySelector('input[name="level"]:checked').value;
+        if (level == 'easy'){
+            
+            rowsInput[0].value = 9;
+            rowsInput[1].value = 9;
+            
+            colsInput[0].value = 9;
+            colsInput[1].value = 9;
+
+            minesInput[0].setAttribute("max", rowsInput[0].value*colsInput[0].value)
+            minesInput[1].setAttribute("max", rowsInput[0].value*colsInput[0].value)
+            
+            minesInput[0].value = 10;
+            minesInput[1].value = 10;
+        }
+        if (level == 'normal'){
+            
+            rowsInput[0].value = 16;
+            rowsInput[1].value = 16;
+
+            colsInput[0].value = 16;
+            colsInput[1].value = 16;
+            
+            minesInput[0].setAttribute("max", rowsInput[0].value*colsInput[0].value)
+            minesInput[1].setAttribute("max", rowsInput[0].value*colsInput[0].value)
+            
+            minesInput[0].value = 40;
+            minesInput[1].value = 40;
+
+        }
+        if (level == 'hard'){
+            
+            rowsInput[0].value = 19;
+            rowsInput[1].value = 19;
+            
+            colsInput[0].value = 30;
+            colsInput[1].value = 30;
+
+            minesInput[0].setAttribute("max", rowsInput[0].value*colsInput[0].value)
+            minesInput[1].setAttribute("max", rowsInput[0].value*colsInput[0].value)
+            
+            minesInput[0].value = 99;
+            minesInput[1].value = 99;
+        }
+        else {
+            minesInput[0].setAttribute("max", rowsInput[0].value*colsInput[0].value)
+            minesInput[1].setAttribute("max", rowsInput[0].value*colsInput[0].value)
+        }
+
+    return
+    },
+    inputChange: function(){
+        let levels = document.querySelectorAll('input[name="level"]');
+
+        let minesInput = document.getElementById("mines").children
+        let rowsInput = document.getElementById("rows").children
+        let colsInput = document.getElementById("cols").children
+        if (document.querySelector('input[name="level"]:checked').value != 'custom'){
+        levels[3].click()}
+        minesInput[0].setAttribute("max", rowsInput[0].value*colsInput[0].value-1);
+        minesInput[1].setAttribute("max", rowsInput[0].value*colsInput[0].value-1);
+        let max = minesInput[0].max
+        if(minesInput[0].max < minesInput[1].value || minesInput[1].max < minesInput[1].value){
+            document.getElementById("mines").innerHTML = '<input class="mines-quantity" type="range" name="minesRange" min="1" max="'+max+'" value="'+max+'" oninput="this.form.minesInput.value=this.value" /><input class="mines-input" type="number" name="minesInput" min="1" max="'+max+'" value="'+max+'" oninput="this.form.minesRange.value=this.value" />'
+        }
+        return
+    },
+    fastCheck: function(){
+        let minesInput = parseInt(document.getElementById("mines").children[0].value)
+        let rowsInput = parseInt(document.getElementById("rows").children[0].value)
+        let colsInput = parseInt(document.getElementById("cols").children[0].value)
+        let theme = document.getElementById("theme").value;
+    return newGame(colsInput, rowsInput, minesInput, theme);   
+    },
+    config: function(){
+        grid.timerPause = true;
+        let menuContainer = document.querySelector('.menu-container');
+        menuContainer.classList.add('toggle');
+        let levels = document.querySelectorAll('input[name="level"]');
+        let rangeInput = document.querySelectorAll('input[type="range"]');
+        let numberInput = document.querySelectorAll('input[type="number"]');
+    
+        rangeInput.forEach(x => 
+            x.addEventListener('click', function () {functionsConfig.inputChange()}, true)
+         );
+         numberInput.forEach(x => 
+            x.addEventListener('click', function () {functionsConfig.inputChange()}, true)
+         );
+    
+         
+         
+         levels.forEach(x => 
+            x.addEventListener('click', function () {functionsConfig.levelselected()}, true)
+            );
+            
+            let cancelBtn = document.querySelector('.cancel-btn');
+        let applyBtn = document.querySelector('.apply-btn');
+        function closing()
+            {menuContainer.classList.remove('toggle')
+            grid.timerPause = false
+        }
+        applyBtn.addEventListener('click', function() {
+            closing();
+            functionsConfig.fastCheck()}, true);
+        cancelBtn.addEventListener('click', function() {closing()});
+        
+        
+        
+        
+        applyBtn.removeEventListener('click', function() {
+            closing();
+            functionsConfig.fastCheck()});
+            cancelBtn.removeEventListener('click', function() {closing()});
+        }
+
+}
+
 export let generalUse = {
     randomIntFromInterval: function(min, max) { // min and max included 
         return Math.floor(Math.random() * (max - min + 1) + min)},
@@ -407,5 +526,28 @@ export let generalUse = {
             return '-'
         } 
             return '';
+    }
+}
+
+export let functionsTimer = {
+    stopTimer: function(){
+        clearInterval(grid.control);
+        return;
+    },
+    cronometro: function(){
+        if (grid.timer == 999 || grid.loses || grid.win){
+            functionsTimer.stopTimer()
+            grid.control = null;
+            return;
+        }
+        if(!grid.timerPause){
+        grid.timer ++
+        selectors.timer.innerHTML = grid.timer.toString()
+        } return;
+    },
+    stopTimeout: function(){
+        for (var i=0; i<grid.myTimeout.length; i++) {
+            clearTimeout(grid.myTimeout[i]);
+              }
     }
 }

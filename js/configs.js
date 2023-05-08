@@ -1,4 +1,6 @@
-import { generalUse } from "./functions";
+import { generalUse, functionsConfig, functionsGamePlay } from "./functions";
+import { newGame } from './modified';
+
 
 export let grid = {
     columns : 16,
@@ -11,9 +13,35 @@ export let grid = {
     checkeds : [],
     gridComplete : [null],
     flagsPosition : [],
+    loses: false,
+    win: false,
+    inexplode: false,
+    invertClick: false,
+    timer: 0,
+    myTimeout: [],
+    control: undefined,
+    timerPause: false,
     themes:[
-        {
-            name: 'google',
+        {name: 'google',
+            specials:{
+                colors: [['var(--exp_background1)', 'var(--exp_color1)'],
+                        ['var(--exp_background2)', 'var(--exp_color2)'],
+                        ['var(--exp_background3)', 'var(--exp_color3)'],
+                        ['var(--exp_background4)', 'var(--exp_color4)'],
+                        ['var(--exp_background5)', 'var(--exp_color5)'],
+                        ['var(--exp_background6)', 'var(--exp_color6)'],
+                        ['var(--exp_background7)', 'var(--exp_color7)'],
+                        ['var(--exp_background8)', 'var(--exp_color8)']],
+
+                bgCols: [['#277BCD','#2F569A'],
+                        ['#388E3C','#00582C'],
+                        ['#D32F2F','#8E2123'],
+                        ['#B648F2','#762F9D'],
+                        ['#FF8F00','#9F5608'],
+                        ['#48E6F1','#2F569A'],
+                        ['#F4C20D','#9F7E08'],
+                        ['#ED44B5','#9A2C76']]
+            },
             functions: {
                 animations: {
                     animationCell: function(positionRep){
@@ -142,7 +170,41 @@ export let grid = {
                 
                     selectors.headStyle.insertAdjacentHTML('beforeend', cellAnim);
                     }
+                },
+                animationExp: function(explode){
+
+                    let Colors = grid.themes[grid.theme.id].specials.colors
+                    let bgCols = grid.themes[grid.theme.id].specials.bgCols
+                
+                    let cont = selectors.content;
+                    let bg1 = generalUse.randomIntFromInterval(0,7);
+                    let bg2 = generalUse.randomIntFromInterval(0,1);
+                    let bg3 = generalUse.randomIntFromInterval(0,1);
+                    if( !grid.flagsPosition.includes(explode)){ // no se el porque esto.
+                
+                        let positionRep = cont.children[parseInt((explode-1)/grid.columns)].children[(explode-1)%grid.columns];
+                
+                
+                        positionRep.classList.replace('cell','number');
+                        positionRep.classList.add('nm');
+                        // positionRep.style.setProperty(`background-color`,`${bgCols[bg1][0]}`);
+                        positionRep.insertAdjacentHTML('afterbegin', 
+                        `<div class="nm-block" style="background-color:${bgCols[bg1][0]}"></div>
+                        <div class="nm-mine" style="background-color:${bgCols[bg1][1]}"></div>
+                        `)
+                        for(let i=1; i<= 8;i++){explode
+                        bg2 = generalUse.randomIntFromInterval(0,1);
+                        
+                        positionRep.insertAdjacentHTML('beforeend',     
+                        `<div class="nm-confetti" style=" background-color: ${Colors[bg1][bg2]};
+                        animation: bookmark-anim${generalUse.randomIntFromInterval(1,20)} ${generalUse.randomFloatInterval(4.5,6.5,1)}s forwards ease-in-out;
+                        scale : ${generalUse.randomFloatInterval(0.5,1.5,1)}"></div>
+                        `);
+                    }
+                
+                    }
                 }
+                
                 },
             congratsLose : function(){
                 selectors.congrats = document.createElement('div');
@@ -177,29 +239,69 @@ export let grid = {
                 )
                 selectors.container.appendChild(selectors.lose)
                 selectors.container.appendChild(selectors.congrats);    
-             }
+             },
+            minesLose: function(number){
+                
+                let cont = selectors.content;
+                let positionRep = cont.children[parseInt((number-1)/grid.columns)].children[(number-1)%grid.columns];
+
+                selectors.btnNewGame.classList.replace('newGame', 'losebtn')
+                document.querySelector('.lose-container').style.display = 'block';
+                grid.themes[grid.theme.id].functions.animations.animationExp(number);
+
+                let deletenum = grid.minesPositions.indexOf(number);
+                grid.minesPositions.splice(deletenum, 1);
+            
+                for (let flag of grid.flagsPosition){
+                    if(!grid.minesPositions.includes(flag)){
+                        positionRep = cont.children[parseInt((flag-1)/grid.columns)].children[(flag-1)%grid.columns];
+                        positionRep.classList.replace('flag','flagerror');
+                        positionRep.innerHTML = ''
+                    }
+                }
+            
+                for (let explode of grid.minesPositions){
+                grid.myTimeout.push(setTimeout(grid.themes[grid.theme.id].functions.animations.animationExp, generalUse.randomIntFromInterval(500,(grid.minesQuantity*500)), explode));
+                }
+            },
+            templategen: function() {return grid.themes[3].common.templategen()},
+
+ 
             }
             }
         ,
         {name: 'windows',
         
         functions:{
-            objself:this,
-            get animations() {return {animations: grid.themes[3].common.animations}},
-            get congratsLose() {return grid.themes[3].common.congratsLose()}
-        }},
+            animations: {
+                animationCell: function() {return grid.themes[3].common.animations.animationCell},
+                bookmarkHeadAnimation: function() {return grid.themes[3].common.animations.bookmarkHeadAnimation()},
+                cellAnimation: function() {return grid.themes[3].common.animations.cellAnimation},
+            },
+            congratsLose: function() {return grid.themes[3].common.congratsLose()},
+            minesLose: function() {return grid.themes[3].common.minesLose()},
+            templategen: function() {return grid.themes[3].common.templategen()},
+
+        },
+    },
         {name: 'pacman',
         functions:{
-            get animations() {return {animations: grid.themes[3].common.animations}},
-            get congratsLose() {return grid.themes[3].common.congratsLose()}
+            animations: {
+                animationCell: function() {return grid.themes[3].common.animations.animationCell},
+                bookmarkHeadAnimation: function() {return grid.themes[3].common.animations.bookmarkHeadAnimation()},
+                cellAnimation: function() {return grid.themes[3].common.animations.cellAnimation},
+            },
+            congratsLose: function() {return grid.themes[3].common.congratsLose()},
+            minesLose: function() {return grid.themes[3].common.minesLose()},
+            templategen: function() {return grid.themes[3].common.templategen()},
         }},
         {name: 'common',
         common: 
             {
                 animations: {
-                    animationCell: function(positionRep){},
-                    bookmarkHeadAnimation: function(){},
-                    cellAnimation: function(){},
+                    animationCell: function(positionRep){return},
+                    bookmarkHeadAnimation: function(){return},
+                    cellAnimation: function(){return},
                 },
                 menu : function(){
                 selectors.menu = document.createElement('div');
@@ -264,26 +366,104 @@ export let grid = {
                     selectors.congrats.className = 'congrats';
                     selectors.congrats.innerText = 'Felicitaciones has ganado!';
                     selectors.container.appendChild(selectors.congrats)
-                }
+                },
+                minesLose: function(number){
+                    let cont = selectors.content;
+                    let positionRep ;
+                    selectors.btnNewGame.classList.replace('newGame', 'losebtn')
+                    document.querySelector('.lose').style.display = 'block'
+                    for (let flag of grid.flagsPosition){
+                        if(!grid.minesPositions.includes(flag)){
+                            positionRep = cont.children[parseInt((flag-1)/grid.columns)].children[(flag-1)%grid.columns];
+                            positionRep.classList.replace('flag','flagerror');
+                            positionRep.innerHTML = ''
+                        }
+                    }
+                    for (let explode of grid.minesPositions){
+                        if( !grid.flagsPosition.includes(explode)){ // no se el porque esto.
+                        let positionRep = cont.children[parseInt((explode-1)/grid.columns)].children[(explode-1)%grid.columns];            
+                        positionRep.classList.replace('cell','number');
+                        positionRep.classList.add('nm');}
 
+                    }
+                },
+                templategen: function(){
+                    selectors.headStyle = document.createElement('style');
+                    selectors.headHTML[0].appendChild(selectors.headStyle);
+                    grid.themes[grid.theme.id].functions.animations.bookmarkHeadAnimation()
+                    grid.themes[grid.theme.id].functions.animations.cellAnimation()
+                
+                    selectors.fullScreen = document.createElement('div');
+                    selectors.header = document.createElement('header');
+                
+                    selectors.fullScreen.className = `full-screen ${grid.theme.name}`
+                
+                    document.body.appendChild(selectors.fullScreen);
+                    selectors.section = document.createElement('section');
+                    selectors.container = document.createElement('div');
+                
+                    selectors.container.className = 'container';
+                    selectors.fullScreen.appendChild(selectors.container);
+                    selectors.header.className = 'header';
+                    selectors.container.appendChild(selectors.header);
+                
+                    let info = document.createElement('div');
+                    info.className = 'info';
+                    selectors.header.appendChild(info);
+                    selectors.timer = document.createElement('div');
+                    selectors.timer.className = 'timer';
+                    selectors.timer.innerText = '0'
+                    info.appendChild(selectors.timer);
+                    selectors.btnNewGame = document.createElement('div');
+                    selectors.btnNewGame.className = 'btn newGame';
+                    info.appendChild(selectors.btnNewGame);
+                    let btnConfig = document.createElement('div');
+                    btnConfig.className = 'config-btn';
+                    info.appendChild(btnConfig);
+                    selectors.btnFg = document.createElement('div');
+                    selectors.btnFg.className = 'btn fg';
+                    info.appendChild(selectors.btnFg);
+                    
+                    selectors.mines = document.createElement('div');
+                    selectors.mines.className = 'mines';
+                    info.appendChild(selectors.mines);
+                
+                    selectors.section.className = 'section';
+                    selectors.container.appendChild(selectors.section);
+                    
+                    selectors.content = document.createElement('div');
+                    selectors.content.className = 'contenedor';
+                    selectors.section.appendChild(selectors.content);
+                    let row;
+                    let cellcont; 
+                
+                    for(let i = 1; i<=grid.rows; i++){
+                        row = document.createElement('div');
+                        row.className = `row r${i}`;
+                        selectors.content.appendChild(row);
+                        for(let j = 1; j<=grid.columns; j++){
+                            cellcont = document.createElement('div');
+                            cellcont.className = `cell c${j}`;
+                            row.appendChild(cellcont);
+                        }
+                    }
+                
+                    grid.themes[grid.theme.id].functions.congratsLose()
+                    grid.themes[3].common.menu()
+                },
             }
         }]
     ,
     theme: {name: 'google',
     id: 0},
-    loses: false,
-    win: false,
-    inexplode: false,
-    invertClick: false,
-}
 
+}
 
 export let selectors = {
     headHTML: document.getElementsByTagName('head'),
     headStyle: undefined,
     content: undefined,
     header: undefined,
-    timer: undefined,
     mines: undefined,
     fullScreen: undefined,
     section: undefined,
@@ -293,8 +473,19 @@ export let selectors = {
     congrats: undefined,
     lose: undefined,
     menu: undefined,
+    newGameButtons: undefined,
+    configbtn: undefined,
+    fg: undefined,
     listeners :
     {
-
+        listenerNewGame: function(){selectors.newGameButtons.forEach(x => 
+            x.addEventListener('click', function () {newGame()}, true)
+        );
+        return},
+        listenerConfigBtn: function() {selectors.configbtn.addEventListener('click', function ()  { functionsConfig.config()}, true); return},
+        listenerContent: function() {selectors.content.addEventListener('click', function (event) { functionsGamePlay.check(event, 'primary') }, true);
+        selectors.content.addEventListener('contextmenu', function (event) { functionsGamePlay.check(event, 'secondary') }, true); 
+        return},
+        listenerFg: function() {selectors.fg.addEventListener('click', function () {functionsGamePlay.invert()}, true); return},
     }
 }
