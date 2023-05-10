@@ -456,8 +456,13 @@ export let functionsConfig = {
         let minesInput = document.getElementById("mines").children
         let rowsInput = document.getElementById("rows").children
         let colsInput = document.getElementById("cols").children
+        if (grid.theme.id == 1){
+        levels[3]
+        }
+        else{
         if (document.querySelector('input[name="level"]:checked').value != 'custom'){
         levels[3].click()}
+    }
         minesInput[0].setAttribute("max", rowsInput[0].value*colsInput[0].value-1);
         minesInput[1].setAttribute("max", rowsInput[0].value*colsInput[0].value-1);
         let max = minesInput[0].max
@@ -467,10 +472,16 @@ export let functionsConfig = {
         return
     },
     fastCheck: function(){
+        let theme ;
         let minesInput = parseInt(document.getElementById("mines").children[0].value)
         let rowsInput = parseInt(document.getElementById("rows").children[0].value)
         let colsInput = parseInt(document.getElementById("cols").children[0].value)
-        let theme = document.getElementById("theme").value;
+        if (grid.theme.id == 1){
+            theme = grid.theme.id;
+        }
+        else{
+            theme = document.getElementById("theme").value;
+        }
     return newGame(colsInput, rowsInput, minesInput, theme);   
     },
     config: function(){
@@ -512,6 +523,28 @@ export let functionsConfig = {
             closing();
             functionsConfig.fastCheck()});
             cancelBtn.removeEventListener('click', function() {closing()});
+        },
+        clicked: function(i){
+            if (selectors.menuUpClick == false){
+                selectors.menuUpClick = true;
+                functionsConfig.menuDrop(i)
+            }
+            else{
+                selectors.menuUpClick = false;
+                selectors.menuUpChild[i].classList.replace('active','non-active')
+            }
+        },
+        menuDrop: function(i){
+            if (selectors.menuUpClick == true){
+                for (let j = 0; j < selectors.menuUpChild.length; j++){
+                    if (i == j){
+                        selectors.menuUpChild[j].classList.replace('non-active','active')
+                    }
+                    else{
+                        selectors.menuUpChild[j].classList.replace('active','non-active')
+                    }
+                }
+            }
         }
 
 }

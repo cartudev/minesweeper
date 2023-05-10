@@ -278,10 +278,164 @@ export let grid = {
                 bookmarkHeadAnimation: function() {return grid.themes[3].common.animations.bookmarkHeadAnimation()},
                 cellAnimation: function() {return grid.themes[3].common.animations.cellAnimation},
             },
+            menu: function() {
+                selectors.menu = document.createElement('div');
+                selectors.menu.className = 'menu-container';
+                selectors.container.appendChild(selectors.menu);
+                selectors.menu.insertAdjacentHTML('beforeend', `
+                <div class="inputs">
+                <form>
+                <p>Columns</p>
+            
+                <div id="cols">
+                <input class="cols-quantity" type="range" name="colsRange" min="8" max="30" value="16" oninput="this.form.colsInput.value=this.value" />
+                <input class="cols-input" type="number" name="colsInput" min="8" max="30" value="16" oninput="this.form.colsRange.value=this.value" />
+                </div>
+                <p>Rows</p>  
+                <div id="rows">
+                <input class="rows-quantity" type="range" name="rowsRange" min="8" max="30" value="16" oninput="this.form.rowsInput.value=this.value" />
+                <input class="rows-input" type="number" name="rowsInput" min="8" max="30" value="16" oninput="this.form.rowsRange.value=this.value" />
+                </div>
+                <p>Mines</p>
+                <div id="mines">
+                <input class="mines-quantity" type="range" name="minesRange" min="1" max="256" value="40" oninput="this.form.minesInput.value=this.value" />
+                <input class="mines-input" type="number" name="minesInput" min="1" max="256" value="40" oninput="this.form.minesRange.value=this.value" />
+                </div>
+                </form>
+                </div>
+                <div class="buttons">
+                <button class="apply-btn">Apply</button>
+                <button class="cancel-btn">Cancel</button>
+                </div>
+                `)
+                return 
+            },
             congratsLose: function() {return grid.themes[3].common.congratsLose()},
             minesLose: function() {return grid.themes[3].common.minesLose()},
-            templategen: function() {return grid.themes[3].common.templategen()},
+            templategen: function(){
+                selectors.headStyle = document.createElement('style');
+                selectors.headHTML[0].appendChild(selectors.headStyle);
+                grid.themes[grid.theme.id].functions.animations.bookmarkHeadAnimation()
+                grid.themes[grid.theme.id].functions.animations.cellAnimation()
+            
+                selectors.fullScreen = document.createElement('div');
+                selectors.header = document.createElement('header');
+            
+                selectors.fullScreen.className = `full-screen ${grid.theme.name}`
+            
+                document.body.appendChild(selectors.fullScreen);
+                selectors.section = document.createElement('section');
+                selectors.container = document.createElement('div');
+            
+                selectors.container.className = 'container';
+                selectors.fullScreen.appendChild(selectors.container);
+                
+                
+                selectors.menuUp = document.createElement('div');
+                selectors.menuUp.className = 'menu-up';
+                selectors.container.appendChild(selectors.menuUp);
 
+                selectors.menuUp.insertAdjacentHTML('beforeend', `
+                <div class="game non-active">Game
+                <div id='change' class="menu-content">
+                    <div id="new">New</div>
+                    <div class="hr"></div>
+                    <div id="beginner">Beginner</div>
+                    <div id="intermediate">Intermediate</div>
+                    <div id="expert">Expert</div>
+                    <div id="custom"><span class="selected"></span>Custom</div>
+                </div>
+                </div>
+                <div class="help non-active">Help
+                <div class="menu-content">
+                <div id="about">About</div>
+                </div>
+                </div>
+                <div class="extras non-active">Extras
+                <div class="menu-content">
+                <div id="windows"><span></span>Skin windows</div>
+                <div id="google">Skin google</div>
+                <div id="pacman">Skin pacman</div>
+                </div>
+                </div>
+                `);
+                selectors.menuUpClick = false;
+                selectors.menuUpChild = selectors.menuUp.children;
+                selectors.change = document.querySelector('#change')
+                for (let i = 0; i < selectors.menuUpChild.length; i++) {
+                    selectors.menuUpChild[i].addEventListener('click', function () {functionsConfig.clicked(i)}, true);
+                    selectors.menuUpChild[i].addEventListener('mouseenter', function () {functionsConfig.menuDrop(i)}, true);
+                
+                  }
+                document.querySelector('#new').addEventListener('click', function () {newGame()}, true)
+                document.querySelector('#beginner').addEventListener('click', function () {newGame(9, 9, 10, 1)
+                    document.querySelector('.selected').remove()
+                    document.querySelector('#beginner').innerHTML = `<span class="selected"></span>Beginner`
+                    }, true);
+                document.querySelector('#intermediate').addEventListener('click', function () {newGame(16, 16, 40, 1)
+                    document.querySelector('.selected').remove()
+                    document.querySelector('#intermediate').innerHTML = `<span class="selected"></span>Intermediate`
+                }, true)
+                document.querySelector('#expert').addEventListener('click', function () {newGame(30, 19, 99, 1)
+                    document.querySelector('.selected').remove()
+                    document.querySelector('#expert').innerHTML = `<span class="selected"></span>Expert`
+                    }, true);
+                document.querySelector('#custom').addEventListener('click', function () {
+                    functionsConfig.config()
+                }, true)
+
+                document.querySelector('#windows').addEventListener('click', function () {newGame()}, true)
+                document.querySelector('#google').addEventListener('click', function () {newGame(grid.columns, grid.rows, grid.minesQuantity, 0)}, true)
+                document.querySelector('#pacman').addEventListener('click', function () {newGame(grid.columns, grid.rows, grid.minesQuantity, 2)}, true)
+
+
+                selectors.header.className = 'header';
+                selectors.container.appendChild(selectors.header);
+            
+                let info = document.createElement('div');
+                info.className = 'info';
+                selectors.header.appendChild(info);
+                selectors.timer = document.createElement('div');
+                selectors.timer.className = 'timer';
+                selectors.timer.innerText = '0'
+                info.appendChild(selectors.timer);
+                selectors.btnNewGame = document.createElement('div');
+                selectors.btnNewGame.className = 'btn newGame';
+                info.appendChild(selectors.btnNewGame);
+                let btnConfig = document.createElement('div');
+                btnConfig.className = 'config-btn';
+                info.appendChild(btnConfig);
+                selectors.btnFg = document.createElement('div');
+                selectors.btnFg.className = 'btn fg';
+                info.appendChild(selectors.btnFg);
+                
+                selectors.mines = document.createElement('div');
+                selectors.mines.className = 'mines';
+                info.appendChild(selectors.mines);
+            
+                selectors.section.className = 'section';
+                selectors.container.appendChild(selectors.section);
+                
+                selectors.content = document.createElement('div');
+                selectors.content.className = 'contenedor';
+                selectors.section.appendChild(selectors.content);
+                let row;
+                let cellcont; 
+            
+                for(let i = 1; i<=grid.rows; i++){
+                    row = document.createElement('div');
+                    row.className = `row r${i}`;
+                    selectors.content.appendChild(row);
+                    for(let j = 1; j<=grid.columns; j++){
+                        cellcont = document.createElement('div');
+                        cellcont.className = `cell c${j}`;
+                        row.appendChild(cellcont);
+                    }
+                }
+            
+                grid.themes[grid.theme.id].functions.congratsLose()
+                grid.themes[grid.theme.id].functions.menu()
+            },
         },
     },
         {name: 'pacman',
@@ -345,7 +499,7 @@ export let grid = {
                 <p>theme</p>
                 <select id="theme">    
                 <option value='0'>Google Theme</option>
-                <option value='1'>Classic Windows (w.i.p)</option>  
+                <option value='1'>Classic Windows</option>  
                 <option value='2'>Pacman style (w.i.p)</option>
                 </select>
                 </div>
@@ -454,8 +608,8 @@ export let grid = {
             }
         }]
     ,
-    theme: {name: 'google',
-    id: 0},
+    theme: {name: 'windows',
+    id: 1},
 
 }
 

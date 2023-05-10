@@ -55,6 +55,8 @@ The following contributors have contributed to this project and their contact in
 - [@cartudev](https://github.com/cartudev/)
 
 ## Version History
+* 0.3.1
+    * Completed windows style theme.
 * 0.3.0
     * All the js code has been moduled.
 * 0.2.2
