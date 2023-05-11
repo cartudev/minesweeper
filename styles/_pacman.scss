@@ -114,6 +114,9 @@
         margin: 0;
         background-color: #000;
         color: #fff;
+        align-items: center;
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+
         
     }
     
@@ -136,26 +139,33 @@
     .newGame{
         image-rendering: pixelated;
         /* border: #fff solid 1px; */
-    
-        width: 16px;
-        height: 16px;
-        transform: scale(3);
+        order: 2;
+
+        width: 60px;
+        height: 60px;
         background: url("Pacman-sprites.png");
+        background-size: 860px;
         animation: pacman 0.3s steps(1) infinite;
     }
     .newGame:hover{
+        position: relative;
+        top: -3px;
+        left: -3px;
+        border: 3px solid white;
         animation-play-state: paused;
     }
     
     
     @keyframes pacman{
-        0% { background-position: -3px 0px; }
-        25%,75% { background-position: -19px 0px; }
-        50% { background-position: -35px 0px; }
+        0% { background-position: -13px 0px; }
+        25%,75% { background-position: -73px 0px; }
+        50% { background-position: -133px 0px; }
     
     }
     
     .losebtn{
+        order: 2;
+
         image-rendering: pixelated;
         width: 16px;
         height: 16px;
@@ -184,19 +194,42 @@
         background: url("Pacman-sprites.png") -34px -49px;
     }
     
-    
+    .fg{
+        order: 3;
+        width: 60px;
+        height: 60px;
+        &:hover{
+            border: 3px solid white
+        }
+    }
     .fg::before{
+        position: relative;
+        top:-8px;
+        left: 4px;
         cursor: default;
         content: '.';
+        order: 3;
+
     }
+    .config-btn{
+        order: 5;
+    }
+    .config-btn::before{
+        font-size: 30px;
+        cursor: default;
+        content: "·-\a ·-\a ·-";
+        white-space: pre;
+        line-height: 0.5; 
+        }
+    
     .mn{
         margin: auto;
         text-align: center;
         display: block;
         width: 16px;
         height: 16px;
+        order: 3;
         transform: scale(3);
-    
         image-rendering: pixelated; 
         background: url("Pacman-sprites.png") -130px -49px;
     
@@ -211,6 +244,8 @@
         color:#fff;
         font-size: 25px;
         font-weight: bolder;
+        order: 4;
+
     
     }
     
@@ -230,6 +265,8 @@
         font-weight: bolder;
         color:#fff;
         font-size: 25px;
+        order: 1;
+
     
     }
     .timer::before{
@@ -278,6 +315,20 @@
         position: relative;
         left: 1px;
         bottom: 0vh;
+    }
+    .lose, .congrats{        
+        display: none;
+        text-align: center;
+        vertical-align: center;
+        line-height: 100px;
+        width: 30%;
+        height: 30%;
+        position: absolute;
+        font-size: 25px;
+        inset: 0;
+        color: #fff;
+        background-color: #000;
+        margin: auto;
     }
     
     
@@ -389,8 +440,37 @@
     
         }
       
-      
-    
+      .menu-container{
+        display: none;
+        width: 500px;
+        height: 500px;
+        gap: 50px;
+        position: absolute;
+        font-size: 25px;
+        inset: 0;
+        color: #fff;
+        background-color: #000;
+        margin: auto;
+        text-align: center;
+        .menu{
+            p{display: none;}
+        }
+        .level{
+            display: flex;
+            margin: 10px;
+            flex-direction: column;
+            gap: 20px;
+            input{
+                display: none;
+            }
+            input:checked + label{
+                color: #FEFF00 ;}
+        }
+      }
+    .toggle{
+        display: block;
+        
+    }
       .flagerror{
     
             clip-path: polygon(

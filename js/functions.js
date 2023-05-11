@@ -398,7 +398,7 @@ export let functionsConfig = {
         let minesInput = document.getElementById("mines").children
         let rowsInput = document.getElementById("rows").children
         let colsInput = document.getElementById("cols").children
-
+        document.getElementById("theme").value = grid.theme.id
         let level = document.querySelector('input[name="level"]:checked').value;
         if (level == 'easy'){
             
@@ -486,6 +486,7 @@ export let functionsConfig = {
     },
     config: function(){
         grid.timerPause = true;
+        document.getElementById("theme").value = grid.theme.id
         let menuContainer = document.querySelector('.menu-container');
         menuContainer.classList.add('toggle');
         let levels = document.querySelectorAll('input[name="level"]');

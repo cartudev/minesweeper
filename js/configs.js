@@ -500,7 +500,7 @@ export let grid = {
                 <select id="theme">    
                 <option value='0'>Google Theme</option>
                 <option value='1'>Classic Windows</option>  
-                <option value='2'>Pacman style (w.i.p)</option>
+                <option value='2'>Pacman style</option>
                 </select>
                 </div>
                 <div class="buttons">
@@ -608,8 +608,8 @@ export let grid = {
             }
         }]
     ,
-    theme: {name: 'windows',
-    id: 1},
+    theme: {name: 'google',
+    id: 0},
 
 }
 
